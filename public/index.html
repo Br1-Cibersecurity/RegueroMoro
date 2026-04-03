@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reguero Moro - TPV Gestión Elite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37; --gold-light: #f1d592;
+            --bg-deep: #0f1215; --bg-accent: #1c2229;
+            --panel-white: #ffffff;
+            --success: #2e7d32; --info: #1565c0; --danger: #c62828;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif; margin: 0; display: flex;
+            height: 100vh; background: radial-gradient(circle at 40% 50%, var(--bg-accent) 0%, var(--bg-deep) 100%);
+            color: white; overflow: hidden;
+        }
+
+        /* LOGIN */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-deep); z-index: 5000; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        .camarero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
+        .btn-camarero {
+            padding: 25px 40px; background: linear-gradient(145deg, #2a2f35, #14181c);
+            border: 2px solid var(--gold); border-radius: 15px; color: var(--gold);
+            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s;
+        }
+        .btn-camarero:hover { background: var(--gold); color: black; transform: scale(1.05); }
+
+        /* MARCA DE AGUA */
+        .marca-agua-central {
+            position: fixed; top: 55%; left: 35%; transform: translate(-50%, -50%);
+            width: 500px; height: 500px; background: url('logo.png') center/contain no-repeat;
+            opacity: 0.12; filter: invert(1) brightness(0.7); pointer-events: none; z-index: 0;
+        }
+
+        /* ESTRUCTURA */
+        #panel-seleccion { flex: 2.5; padding: 40px; overflow-y: auto; z-index: 2; position: relative; }
+        .header-app { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(212,175,55,0.3); padding-bottom: 15px; margin-bottom: 20px; }
+        .header-app h1 { font-family: 'Cinzel'; color: var(--gold); margin: 0; font-size: 1.8rem; }
+        .logo-superior { height: 65px; filter: invert(1) drop-shadow(0 0 10px var(--gold)); }
+
+        /* BOTONES INTERFAZ */
+        .zona-titulo { width: 100%; color: var(--gold); border-bottom: 1px solid rgba(212,175,55,0.2); margin: 25px 0 15px; font-family: 'Cinzel'; text-transform: uppercase; letter-spacing: 2px; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        
+        .btn-item {
+            padding: 25px 15px; background: linear-gradient(145deg, #2a2f35, #14181c);
+            border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px;
+            color: white; font-weight: 700; cursor: pointer; text-transform: uppercase;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.4); transition: 0.2s;
+        }
+        .btn-item:hover { border-color: var(--gold); transform: translateY(-3px); }
+        .btn-item.ocupada { border-color: var(--danger); background: #331a1a; }
+
+        /* TICKET */
+        #panel-comanda {
+            flex: 1; background: var(--panel-white); color: #1a1a1a; margin: 20px;
+            border-radius: 35px; display: flex; flex-direction: column;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 3; overflow: hidden;
+            border-left: 10px solid var(--gold);
+        }
+        .ticket-header { padding: 25px; background: #000; color: var(--gold); text-align: center; font-family: 'Cinzel'; font-size: 1.2rem; }
+        #lista-comanda { flex-grow: 1; padding: 20px; overflow-y: auto; font-weight: 600; }
+        .ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .btn-remove { background: var(--danger); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; }
+
+        .total-box { padding: 30px; background: #f8f9fa; border-top: 2px solid var(--gold); }
+        .total-box h2 { display: flex; justify-content: space-between; margin: 0 0 15px; font-size: 2.2rem; font-weight: 900; }
+        
+        .btn-accion { width: 100%; padding: 20px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; border: none; margin-bottom: 10px; }
+        .btn-pedir { background: #333; color: white; }
+        .btn-cobrar { background: var(--gold); color: black; }
+
+        /* MODAL PAGO CORREGIDO */
+        #modal-pago {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 6000; display: none;
+            align-items: center; justify-content: center; backdrop-filter: blur(10px);
+        }
+        .pago-container {
+            background: white; padding: 45px; border-radius: 40px;
+            color: #1a1a1a; text-align: center; width: 450px;
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.5); border-bottom: 15px solid var(--gold);
+        }
+
+        /* Botones de Pago con Estética Reguero Moro */
+        .btn-metodo-elite {
+            padding: 25px; background: linear-gradient(145deg, #222, #000);
+            border: 2px solid var(--gold); border-radius: 20px; color: var(--gold);
+            font-size: 1.4rem; font-weight: 800; cursor: pointer; width: 100%;
+            margin: 10px 0; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 15px;
+        }
+        .btn-metodo-elite:hover { background: var(--gold); color: black; transform: scale(1.02); }
+
+        .pregunta-seccion { display: none; flex-direction: column; gap: 15px; }
+        .input-propina { padding: 15px; font-size: 2.5rem; width: 80%; border-radius: 15px; border: 3px solid var(--gold); text-align: center; margin: 10px auto; font-weight: 900; }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <h1 style="font-family: 'Cinzel'; color: var(--gold); font-size: 3.5rem;">REGUERO MORO</h1>
+        <div class="camarero-grid">
+            <button class="btn-camarero" onclick="login('Bruno')">Bruno</button>
+            <button class="btn-camarero" onclick="login('Manuel')">Manuel</button>
+            <button class="btn-camarero" onclick="login('Raul')">Raul</button>
+            <button class="btn-camarero" onclick="login('LaJefa')">LaJefa</button>
+            <button class="btn-camarero" onclick="login('Aitana')">Aitana</button>
+        </div>
+    </div>
+
+    <div class="marca-agua-central"></div>
+
+    <div id="panel-seleccion">
+        <div class="header-app">
+            <h1 id="titulo-header">SISTEMA GESTIÓN</h1>
+            <div style="text-align: right;">
+                <span id="display-camarero" style="display:block; font-size: 0.9rem; font-weight: 600; color: var(--gold);">-</span>
+                <img src="logo.png" class="logo-superior">
+            </div>
+        </div>
+        <div id="contenido-dinamico"></div>
+    </div>
+
+    <div id="panel-comanda">
+        <div class="ticket-header">MESA: <span id="num-mesa">-</span></div>
+        <div id="lista-comanda"></div>
+        <div class="total-box">
+            <h2><span>TOTAL</span> <span id="total-precio">0.00€</span></h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <button class="btn-accion btn-pedir" onclick="enviarPedido()">PEDIR</button>
+                <button class="btn-accion btn-cobrar" onclick="abrirSelectorPago()">COBRAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-pago">
+        <div class="pago-container">
+            <h2 style="font-family: 'Cinzel'; color: #888;">MESA <span id="pago-mesa-num"></span></h2>
+            <h1 id="pago-total-num" style="font-size: 4rem; margin: 10px 0; font-weight: 900;">0.00€</h1>
+            
+            <div id="paso-metodo">
+                <button class="btn-metodo-elite" onclick="finalizarCobro('Efectivo')">💵 EFECTIVO</button>
+                <button class="btn-metodo-elite" onclick="chequearPropina()">💳 TARJETA</button>
+            </div>
+
+            <div id="paso-propina" class="pregunta-seccion">
+                <h3>¿Han dejado propina?</h3>
+                <button class="btn-metodo-elite" style="background:#eee; color:#333; border:none;" onclick="finalizarCobro('Tarjeta')">NO, SOLO TICKET</button>
+                <button class="btn-metodo-elite" onclick="mostrarInputPropina()">SÍ, HAN DADO DE MÁS</button>
+            </div>
+
+            <div id="paso-importe" class="pregunta-seccion">
+                <h3>Importe TOTAL cobrado:</h3>
+                <input type="number" id="input-total-cobrado" class="input-propina" placeholder="0.00">
+                <button class="btn-metodo-elite" onclick="calcularYFinalizar()">CONFIRMAR COBRO</button>
+            </div>
+
+            <button style="margin-top:25px; background:none; border:none; color:#bbb; text-decoration:underline; cursor:pointer;" onclick="cerrarSelectorPago()">Cancelar y volver</button>
+        </div>
+    </div>
+
+    <script>
+        let carta = {};
+        let camareroActivo = "";
+        let mesaActiva = "";
+        let mesasAbiertas = {};
+
+        async function login(nombre) {
+            camareroActivo = nombre;
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('display-camarero').innerText = "Atiende: " + nombre;
+            await cargarCarta();
+            mostrarMapaMesas();
+        }
+
+        async function cargarCarta() {
+            const res = await fetch('/api/carta');
+            carta = await res.json();
+        }
+
+        function mostrarMapaMesas() {
+            mesaActiva = "";
+            document.getElementById('num-mesa').innerText = "-";
+            actualizarTicket();
+            const container = document.getElementById('contenido-dinamico');
+            container.innerHTML = "";
+            
+            const zonas = [
+                { nombre: "COMEDOR PRINCIPAL", mesas: ["1","2","3","4","5","6","7","8"] },
+                { nombre: "COMEDOR PEQUEÑO 1", mesas: ["C1-1", "C1-2"] },
+                { nombre: "COMEDOR PEQUEÑO 2", mesas: ["C2-1", "C2-2"] },
+                { nombre: "PORCHE", mesas: ["30","31","32","33","34"] },
+                { nombre: "TERRAZA", mesas: ["40","41","42","43","44","45","50","51","52","53","54","55","56"] }
+            ];
+
+            zonas.forEach(z => {
+                container.innerHTML += `<div class="zona-titulo">${z.nombre}</div>`;
+                let grid = `<div class="grid-layout">`;
+                z.mesas.forEach(m => {
+                    const ocupada = (mesasAbiertas[m] && mesasAbiertas[m].length > 0) ? 'ocupada' : '';
+                    grid += `<button class="btn-item ${ocupada}" onclick="seleccionarMesa('${m}')">${m}</button>`;
+                });
+                grid += `</div>`;
+                container.innerHTML += grid;
+            });
+        }
+
+        function seleccionarMesa(numero) {
+            mesaActiva = numero;
+            document.getElementById('num-mesa').innerText = numero;
+            if (!mesasAbiertas[numero]) mesasAbiertas[numero] = [];
+            actualizarTicket();
+            renderizarCategorias(carta, "CARTA - MESA " + numero);
+        }
+
+        function renderizarCategorias(contenido, titulo) {
+            const container = document.getElementById('contenido-dinamico');
+            container.innerHTML = `<button class="btn-item" onclick="mostrarMapaMesas()" style="margin-bottom:20px; background:#444;">⬅ VOLVER A MESAS</button>`;
+            container.innerHTML += `<div class="zona-titulo">${titulo}</div>`;
+            
+            let grid = `<div class="grid-layout">`;
+            if (Array.isArray(contenido)) {
+                contenido.forEach(p => {
+                    grid += `<button class="btn-item" onclick="añadirProducto('${p.nombre}', ${p.precio})">${p.nombre}<br><small>${p.precio.toFixed(2)}€</small></button>`;
+                });
+            } else {
+                Object.keys(contenido).forEach(cat => {
+                    if(cat === "prioridad") return;
+                    grid += `<button class="btn-item" style="border-color:var(--gold);" onclick="navegarCategoria('${cat}')">${cat}</button>`;
+                });
+            }
+            grid += `</div>`;
+            container.innerHTML += grid;
+        }
+
+        function navegarCategoria(cat) { renderizarCategorias(carta[cat], cat); }
+
+        function añadirProducto(nombre, precio) {
+            if (!mesaActiva) return;
+            mesasAbiertas[mesaActiva].push({ nombre, precio, idUnico: Date.now() + Math.random() });
+            actualizarTicket();
+        }
+
+        function eliminarProducto(id) {
+            if (!mesaActiva) return;
+            mesasAbiertas[mesaActiva] = mesasAbiertas[mesaActiva].filter(i => i.idUnico !== id);
+            actualizarTicket();
+        }
+
+        function actualizarTicket() {
+            const lista = document.getElementById('lista-comanda');
+            const totalElt = document.getElementById('total-precio');
+            lista.innerHTML = '';
+            let total = 0;
+            if (mesaActiva && mesasAbiertas[mesaActiva]) {
+                mesasAbiertas[mesaActiva].forEach(i => {
+                    total += i.precio;
+                    lista.innerHTML += `<div class="ticket-item"><span>${i.nombre}</span><div><b>${i.precio.toFixed(2)}€</b><button class="btn-remove" onclick="eliminarProducto(${i.idUnico})">✕</button></div></div>`;
+                });
+            }
+            totalElt.innerText = total.toFixed(2) + "€";
+        }
+
+        // COBRO
+        function abrirSelectorPago() {
+            if (!mesaActiva || mesasAbiertas[mesaActiva].length === 0) return alert("Mesa vacía");
+            document.getElementById('paso-metodo').style.display = 'block';
+            document.getElementById('paso-propina').style.display = 'none';
+            document.getElementById('paso-importe').style.display = 'none';
+            document.getElementById('pago-mesa-num').innerText = mesaActiva;
+            document.getElementById('pago-total-num').innerText = document.getElementById('total-precio').innerText;
+            document.getElementById('modal-pago').style.display = 'flex';
+        }
+
+        function chequearPropina() {
+            document.getElementById('paso-metodo').style.display = 'none';
+            document.getElementById('paso-propina').style.display = 'flex';
+        }
+
+        function mostrarInputPropina() {
+            document.getElementById('paso-propina').style.display = 'none';
+            document.getElementById('paso-importe').style.display = 'flex';
+            document.getElementById('input-total-cobrado').focus();
+        }
+
+        function calcularYFinalizar() {
+            const totalActual = parseFloat(document.getElementById('total-precio').innerText);
+            const cobrado = parseFloat(document.getElementById('input-total-cobrado').value);
+            if (isNaN(cobrado) || cobrado < totalActual) return alert("Importe incorrecto");
+
+            const propina = cobrado - totalActual;
+            if (propina > 0) {
+                mesasAbiertas[mesaActiva].push({ nombre: "PROPINA TARJETA", precio: propina, idUnico: Date.now() + Math.random() });
+                actualizarTicket();
+            }
+            finalizarCobro('Tarjeta');
+        }
+
+        async function finalizarCobro(metodo) {
+            const res = await fetch('/api/caja/cierre', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    mesa: mesaActiva, camarero: camareroActivo,
+                    total: document.getElementById('total-precio').innerText,
+                    metodo: metodo, productos: mesasAbiertas[mesaActiva]
+                })
+            });
+            if (res.ok) {
+                alert("Mesa cerrada.");
+                delete mesasAbiertas[mesaActiva];
+                cerrarSelectorPago();
+                mostrarMapaMesas();
+            }
+        }
+
+        function cerrarSelectorPago() { document.getElementById('modal-pago').style.display = 'none'; }
+        async function enviarPedido() {
+            if (!mesaActiva || mesasAbiertas[mesaActiva].length === 0) return;
+            const res = await fetch('/api/comanda', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ mesa: mesaActiva, camarero: camareroActivo, pedido: mesasAbiertas[mesaActiva] })
+            });
+            if (res.ok) alert("Comanda enviada.");
+        }
+    </script>
+</body>
+</html>

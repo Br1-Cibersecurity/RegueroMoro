@@ -52,7 +52,74 @@ const CARTA_REAL = {
         { nombre: "Crema Cat", precio: 6.00, prioridad: 4 },
         { nombre: "Piña Regue", precio: 6.50, prioridad: 4 },
         { nombre: "Bolas Helado", precio: 4.50, prioridad: 4 }
-    ]
+    ],
+    "Vinos": {
+        "Blancos": [
+            { nombre: "Aprendiz", precio: 14.00, prioridad: 4 },
+            { nombre: "Castelo de Medina", precio: 15.00, prioridad: 4 },
+            { nombre: "Pricum", precio: 18.00, prioridad: 4 },
+            { nombre: "Gradonueve", precio: 11.00, prioridad: 4 },
+            { nombre: "José Pariente", precio: 18.00, prioridad: 4 },
+            { nombre: "Leiras", precio: 19.00, prioridad: 4 },
+            { nombre: "Mar de Frades", precio: 29.00, prioridad: 4 },
+            { nombre: "Mar de Frades 50Cl", precio: 20.00, prioridad: 4 },
+            { nombre: "Casar de Burbia", precio: 20.00, prioridad: 4 },
+            { nombre: "Enate", precio: 19.00, prioridad: 4 },
+            { nombre: "Marieta M. Códax", precio: 17.00, prioridad: 4 },
+            { nombre: "Mara M. Códax", precio: 16.00, prioridad: 4 },
+            { nombre: "Don Pedro Souto", precio: 13.50, prioridad: 4 },
+            { nombre: "Legaris", precio: 17.00, prioridad: 4 }
+        ],
+        "Rosados": [
+            { nombre: "Aprendiz rosado", precio: 15.00, prioridad: 4 },
+            { nombre: "Pricum Barrica", precio: 17.00, prioridad: 4 },
+            { nombre: "Gurdos", precio: 19.00, prioridad: 4 }
+        ],
+        "Tintos": {
+            "D.O CyL": [
+                { nombre: "Las Quintas", precio: 35.00, prioridad: 4 },
+                { nombre: "Aprendiz Tinto", precio: 15.00, prioridad: 4 }
+            ],
+            "D.O León": [
+                { nombre: "Cepas Leonesas", precio: 11.50, prioridad: 4 },
+                { nombre: "El Médico", precio: 30.00, prioridad: 4 },
+                { nombre: "Gamonal Pardevalles", precio: 20.00, prioridad: 4 }
+            ],
+            "D.O Bierzo": [
+                { nombre: "Pizarras de Otero", precio: 11.50, prioridad: 4 },
+                { nombre: "Losada", precio: 19.00, prioridad: 4 },
+                { nombre: "Hombros", precio: 25.00, prioridad: 4 },
+                { nombre: "Pétalos", precio: 29.00, prioridad: 4 },
+                { nombre: "Pittacum Aurea", precio: 27.00, prioridad: 4 }
+            ],
+            "D.O Toro": [
+                { nombre: "Románico", precio: 16.00, prioridad: 4 },
+                { nombre: "Flor de Vetus", precio: 18.00, prioridad: 4 },
+                { nombre: "Almirez", precio: 32.00, prioridad: 4 }
+            ],
+            "D.O Ribera": [
+                { nombre: "Traslascuestas", precio: 17.00, prioridad: 4 },
+                { nombre: "Arzuaga", precio: 35.00, prioridad: 4 },
+                { nombre: "Pruno", precio: 20.00, prioridad: 4 },
+                { nombre: "Cruz de Alba", precio: 25.00, prioridad: 4 }
+            ],
+            "D.O Rioja": [
+                { nombre: "Ramón Bilbao Reser.", precio: 23.00, prioridad: 4 },
+                { nombre: "Viña Pomal Crianza", precio: 18.00, prioridad: 4 },
+                { nombre: "Viña Pomal Reserva", precio: 28.00, prioridad: 4 },
+                { nombre: "Vallovera", precio: 15.00, prioridad: 4 },
+                { nombre: "Marqués Murrieta", precio: 36.00, prioridad: 4 }
+            ],
+            "D.O Cava": [
+                { nombre: "Anna B. Blancs", precio: 24.00, prioridad: 4 },
+                { nombre: "Segura Viudas", precio: 25.00, prioridad: 4 },
+                { nombre: "Reina M. Cristina", precio: 32.00, prioridad: 4 }
+            ],
+            "Champagne": [
+                { nombre: "Albert Meyer", precio: 80.00, prioridad: 4 }
+            ]
+        }
+    }
 };
 
 module.exports = { CARTA_REAL };
