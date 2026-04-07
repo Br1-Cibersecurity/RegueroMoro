@@ -2,32 +2,46 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Maestro - EL REGUERO MORO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>Panel Maestro - EL REGUERO MORO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --dark: #0f1215; --card: #1c2229; --danger: #c62828; }
+        :root { 
+            --gold: #d4af37; --dark: #0f1215; --card: #1c2229; 
+            --danger: #c62828; --success: #2e7d32; --info: #1565c0; 
+        }
         body { font-family: 'Montserrat', sans-serif; background: var(--dark); color: white; margin: 0; padding: 20px; }
         
         /* OVERLAY MENU */
         #overlay-turno { position: fixed; inset: 0; background: var(--dark); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .reloj-box h1 { font-family: 'Cinzel'; color: var(--gold); font-size: 3rem; margin: 0; }
-        .btn-menu { width: 320px; padding: 18px; margin: 8px; border-radius: 12px; border: 2px solid var(--gold); font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .reloj-box h1 { font-family: 'Cinzel'; color: var(--gold); font-size: 3.5rem; margin: 0; text-shadow: 0 0 20px rgba(212,175,55,0.3); }
+        .btn-menu { width: 340px; padding: 20px; margin: 10px; border-radius: 15px; border: 2px solid var(--gold); font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
         .btn-iniciar { background: var(--gold); color: black; }
-        .btn-abrir { background: #222; color: var(--gold); }
-        .btn-historial { background: #333; color: white; border-color: #555; }
-        .btn-disabled { opacity: 0.2; cursor: not-allowed; filter: grayscale(1); }
+        .btn-abrir { background: transparent; color: var(--gold); }
+        .btn-disabled { opacity: 0.15; cursor: not-allowed; filter: grayscale(1); border-color: #444; }
 
-        /* PANEL PRINCIPAL */
+        /* ESTRUCTURA PRINCIPAL */
         #panel-maestro { display: none; }
-        .grid-maestra { display: grid; grid-template-columns: 300px 1fr 400px; gap: 20px; height: 85vh; }
-        .card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; overflow-y: auto; }
+        .grid-maestra { display: grid; grid-template-columns: 320px 1fr 350px; gap: 25px; height: 88vh; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
-        /* ESTILOS AUDITORÍA */
-        .mesa-item { padding: 12px; border-radius: 8px; background: #222; margin-bottom: 8px; cursor: pointer; border: 1px solid #444; }
-        .mesa-item.ocupada { border-color: var(--gold); color: var(--gold); }
-        .timeline-box { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 20px; }
-        .badge-time { font-size: 0.7em; background: #000; padding: 2px 6px; border-radius: 4px; }
-        .producto-linea { display: flex; justify-content: space-between; font-size: 0.9em; padding: 4px 0; border-bottom: 1px solid #333; }
+        /* SELECTOR LATERAL */
+        details summary { list-style: none; padding: 18px; font-weight: 800; color: var(--gold); cursor: pointer; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Cinzel'; letter-spacing: 1px; }
+        .mesa-item { padding: 15px; border-radius: 12px; background: rgba(0,0,0,0.2); margin-bottom: 8px; cursor: pointer; border: 1px solid #333; text-align: center; transition: 0.2s; font-weight: 600; }
+        .mesa-item:hover { background: #2a2f35; border-color: var(--gold); }
+        .mesa-item.ocupada { border-left: 5px solid var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+
+        /* VISOR AUDITORÍA (AUDITORÍA DETALLADA) */
+        .ticket-audit { background: rgba(255,255,255,0.03); border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 1px solid #333; }
+        .ticket-header-audit { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 12px; margin-bottom: 15px; }
+        
+        .seccion-comanda { margin: 15px 0; border-radius: 10px; padding: 12px; }
+        .prio-cocina { border-left: 4px solid var(--success); background: rgba(46, 125, 50, 0.05); }
+        .prio-extras { border-left: 4px solid var(--info); background: rgba(21, 101, 192, 0.05); }
+        
+        .audit-line { display: flex; justify-content: space-between; font-size: 0.95em; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .audit-line small { color: #888; font-size: 0.8em; }
+
+        .total-audit { text-align: right; margin-top: 15px; font-size: 1.3rem; font-weight: 900; color: var(--gold); }
     </style>
 </head>
 <body>
@@ -35,36 +49,38 @@
     <div id="overlay-turno">
         <div class="reloj-box">
             <h1 id="live-reloj">00:00:00</h1>
-            <p id="live-fecha">Cargando...</p>
-            <p>ESTADO: <span id="txt-estado">...</span></p>
+            <p id="live-fecha" style="text-align: center; opacity: 0.6; letter-spacing: 2px;">Cargando...</p>
         </div>
-        <button id="btn-iniciar" class="btn-menu btn-iniciar" onclick="cambiarTurno(true)">Iniciar Turno</button>
-        <button id="btn-entrar" class="btn-menu btn-abrir" onclick="entrarPanel('vivo')">Gestionar Turno Vivo</button>
-        <button id="btn-hist" class="btn-menu btn-historial" onclick="entrarPanel('historial')">Consultar Historial (7 días)</button>
-        <button id="btn-cerrar" class="btn-menu" style="color:var(--danger); border-color:var(--danger); background:none;" onclick="confirmarCierre()">Cerrar Turno</button>
+        <div style="margin: 30px 0; padding: 15px 30px; background: rgba(255,255,255,0.03); border-radius: 50px; border: 1px solid #333;">
+            ESTADO DE SALA: <span id="txt-estado" style="font-weight: 800;">...</span>
+        </div>
+        <button id="btn-iniciar" class="btn-menu btn-iniciar" onclick="cambiarTurno(true)">Abrir Restaurante</button>
+        <button id="btn-entrar" class="btn-menu btn-abrir" onclick="entrarPanel('vivo')">Control de Sala En Vivo</button>
+        <button id="btn-hist" class="btn-menu" style="border-color: #555;" onclick="entrarPanel('historial')">Historial de Turnos</button>
+        <button id="btn-cerrar" class="btn-menu" style="color:var(--danger); border-color:var(--danger); background:none;" onclick="confirmarCierre()">Finalizar Turno</button>
     </div>
 
     <div id="panel-maestro">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h1 id="panel-titulo" style="color:var(--gold); font-family:'Cinzel';">SISTEMA MAESTRO</h1>
-            <button onclick="location.reload()" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:8px 15px; border-radius:5px; cursor:pointer;">SALIR AL MENÚ</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h1 style="color:var(--gold); font-family:'Cinzel'; margin:0;">Panel de Control <span id="modo-txt" style="font-size: 0.5em; vertical-align: middle; opacity: 0.5;"></span></h1>
+            <button onclick="location.reload()" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:700;">⬅ VOLVAR AL INICIO</button>
         </div>
 
         <div class="grid-maestra">
             <div class="card" id="col-selector">
-                <h3 id="titulo-selector">Mesas Activas</h3>
+                <h3 id="titulo-selector" style="margin-top:0; opacity:0.7;">Mesas Disponibles</h3>
                 <div id="lista-items"></div>
             </div>
 
             <div class="card">
-                <h3>Auditoría Detallada</h3>
+                <h3 style="margin-top:0; color:var(--gold);">Auditoría Detallada</h3>
                 <div id="visor-detalle">
-                    <p style="opacity:0.5; text-align:center; margin-top:100px;">Selecciona una mesa o turno para inspeccionar.</p>
+                    <p style="opacity:0.3; text-align:center; margin-top:150px;">Selecciona un elemento para auditar.</p>
                 </div>
             </div>
 
-            <div class="card">
-                <h3>Resumen de Caja</h3>
+            <div class="card" style="background: linear-gradient(180deg, var(--card) 0%, #000 100%);">
+                <h3 style="margin-top:0; opacity:0.7;">Resumen de Caja</h3>
                 <div id="visor-stats"></div>
             </div>
         </div>
@@ -72,53 +88,72 @@
 
     <script>
         let serverData = { turno: { activo: false }, mesasVivas: [], historial: [] };
-        let modoActual = 'vivo'; // 'vivo' o 'historial'
+        let modoActual = 'vivo';
 
         function actualizarReloj() {
             const ahora = new Date();
             document.getElementById('live-reloj').innerText = ahora.toLocaleTimeString('es-ES');
-            document.getElementById('live-fecha').innerText = ahora.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+            document.getElementById('live-fecha').innerText = ahora.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
         }
         setInterval(actualizarReloj, 1000);
 
         async function fetchData() {
-            const res = await fetch('/api/maestro/status');
-            serverData = await res.json();
-            updateMenuUI();
-            if(modoActual === 'vivo' && document.getElementById('panel-maestro').style.display === 'block') renderPanelVivo();
+            try {
+                const res = await fetch('/api/maestro/status');
+                serverData = await res.json();
+                updateMenuUI();
+                if(modoActual === 'vivo' && document.getElementById('panel-maestro').style.display === 'block') renderPanelVivo();
+            } catch(e) {}
         }
 
         function updateMenuUI() {
             const t = serverData.turno;
-            document.getElementById('txt-estado').innerText = t.activo ? "ACTIVO 🟢" : "CERRADO 🔴";
+            document.getElementById('txt-estado').innerText = t.activo ? "PUERTAS ABIERTAS 🟢" : "CERRADO 🔴";
             document.getElementById('btn-iniciar').disabled = t.activo;
             document.getElementById('btn-iniciar').classList.toggle('btn-disabled', t.activo);
             document.getElementById('btn-entrar').disabled = !t.activo;
             document.getElementById('btn-entrar').classList.toggle('btn-disabled', !t.activo);
+            document.getElementById('btn-cerrar').disabled = !t.activo;
+            document.getElementById('btn-cerrar').classList.toggle('btn-disabled', !t.activo);
         }
 
         async function entrarPanel(modo) {
             modoActual = modo;
             document.getElementById('overlay-turno').style.display = 'none';
             document.getElementById('panel-maestro').style.display = 'block';
+            document.getElementById('modo-txt').innerText = modo === 'vivo' ? "[SALA EN VIVO]" : "[HISTÓRICO]";
             
             if(modo === 'historial') {
-                document.getElementById('panel-titulo').innerText = "AUDITORÍA HISTÓRICA";
-                document.getElementById('titulo-selector').innerText = "Turnos Pasados";
+                document.getElementById('titulo-selector').innerText = "Turnos Cerrados";
                 cargarListaTurnos();
             } else {
                 renderPanelVivo();
             }
         }
 
-        // --- LÓGICA VIVO ---
         function renderPanelVivo() {
             const lista = document.getElementById('lista-items');
-            lista.innerHTML = "";
-            ["1","2","3","4","5","6","7","8"].forEach(id => {
-                const viva = serverData.mesasVivas.find(m => m.id === id);
-                lista.innerHTML += `<div class="mesa-item ${viva?'ocupada':''}" onclick="inspeccionarMesaViva('${id}')">Mesa ${id} ${viva?'(Ocupada)':''}</div>`;
+            let html = "";
+            const zonas = [
+                { nombre: "Comedor Principal", mesas: ["1","2","3","4","5","6","7","8"] },
+                { nombre: "Pequeños C1", mesas: ["C1-1", "C1-2"] },
+                { nombre: "Pequeños C2", mesas: ["C2-1", "C2-2"] },
+                { nombre: "Porche", mesas: ["30","31","32","33","34"] },
+                { nombre: "Terraza", mesas: ["40","41","42","43","44","45","50","51","52","53","54","55","56"] }
+            ];
+            
+            zonas.forEach((zona, i) => {
+                const ocupadas = zona.mesas.filter(id => serverData.mesasVivas.find(m => m.id === id)).length;
+                html += `<details ${i===0?'open':''} style="margin-bottom:15px; border:1px solid rgba(255,255,255,0.05); border-radius:12px; background:rgba(0,0,0,0.2);">
+                            <summary>${zona.nombre} ${ocupadas ? `<span style="background:var(--danger); color:white; padding:2px 8px; border-radius:10px; font-size:0.7em; margin-left:10px;">${ocupadas}</span>` : ''}</summary>
+                            <div style="padding:15px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">`;
+                zona.mesas.forEach(id => {
+                    const viva = serverData.mesasVivas.find(m => m.id === id);
+                    html += `<div class="mesa-item ${viva?'ocupada':''}" onclick="inspeccionarMesaViva('${id}')">Mesa ${id}</div>`;
+                });
+                html += `</div></details>`;
             });
+            lista.innerHTML = html;
             actualizarResumenCaja(serverData.historial);
         }
 
@@ -127,67 +162,115 @@
             const mesa = serverData.mesasVivas.find(m => m.id === id);
             const cerradas = serverData.historial.filter(h => h.mesa === id);
 
-            let html = `<h2>Auditoría Mesa ${id} (Turno Actual)</h2>`;
+            let html = `<h2 style="font-family:'Cinzel'; color:var(--gold); margin-bottom:20px;">Auditoría Mesa ${id}</h2>`;
+            
             if(mesa) {
-                html += `<div class="timeline-box"><b>EN CURSO - Abierta por: ${mesa.iniciadoPor}</b><br>`;
-                mesa.pedido.forEach(p => {
-                    html += `<div class="producto-linea"><span>${p.nombre} <small>(${p.camarero})</small></span> <span>${p.precio}€</span></div>`;
-                });
-                html += `</div>`;
+                const cocina = mesa.pedido.filter(p => p.prioridad <= 3);
+                const extras = mesa.pedido.filter(p => p.prioridad > 3);
+                
+                html += `<div class="ticket-audit" style="border-left: 4px solid var(--gold);">
+                            <div class="ticket-header-audit">
+                                <span><b>ESTADO: ACTIVA</b></span>
+                                <span style="font-size:0.8em; opacity:0.6;">Iniciado por: ${mesa.iniciadoPor}</span>
+                            </div>`;
+                
+                if(cocina.length > 0) {
+                    html += `<div class="seccion-comanda prio-cocina"><small style="color:var(--success); font-weight:800;">🖨️ COMANDA COCINA</small>`;
+                    cocina.forEach(p => html += `<div class="audit-line"><span>${p.nombre}</span> <span>${p.precio.toFixed(2)}€</span></div>`);
+                    html += `</div>`;
+                }
+
+                if(extras.length > 0) {
+                    html += `<div class="seccion-comanda prio-extras"><small style="color:var(--info); font-weight:800;">🍷 BEBIDAS / EXTRAS</small>`;
+                    extras.forEach(p => html += `<div class="audit-line"><span>${p.nombre}</span> <span>${p.precio.toFixed(2)}€</span></div>`);
+                    html += `</div>`;
+                }
+
+                const total = mesa.pedido.reduce((acc,p) => acc+p.precio, 0);
+                html += `<div class="total-audit">SUBTOTAL: ${total.toFixed(2)}€</div></div>`;
             }
+
             cerradas.reverse().forEach(h => {
-                html += `<div class="timeline-box" style="opacity:0.6"><b>COBRADA - Total: ${h.total}€</b><br>Cobró: ${h.cobradoPor} | Método: ${h.metodo} | Propina: ${h.propina}€</div>`;
+                html += `<div class="ticket-audit" style="opacity:0.5;">
+                            <div class="ticket-header-audit">
+                                <span><b>ESTADO: COBRADA</b></span>
+                                <span style="font-size:0.8em;">${h.metodo} | ${h.cobradoPor}</span>
+                            </div>
+                            <div class="total-audit" style="font-size:1.1rem;">TOTAL: ${h.total.toFixed(2)}€</div>
+                         </div>`;
             });
+
             visor.innerHTML = html;
         }
 
-        // --- LÓGICA HISTORIAL ---
         async function cargarListaTurnos() {
             const res = await fetch('/api/maestro/historial-archivos');
             const archivos = await res.json();
-            const lista = document.getElementById('lista-items');
-            lista.innerHTML = archivos.map(a => `<div class="mesa-item" onclick="cargarDetalleTurno('${a.id}')">📂 ${a.id.replace('turno_','').replace('.json','')}</div>`).join('');
+            document.getElementById('lista-items').innerHTML = archivos.map(a => 
+                `<div class="mesa-item" onclick="cargarDetalleTurno('${a.id}')">
+                    <small style="opacity:0.5; display:block;">Turno Finalizado</small>
+                    ${a.id.replace('turno_','').replace('.json','').substring(0,16)}
+                 </div>`).join('');
         }
 
         async function cargarDetalleTurno(archivo) {
-            const res = await fetch(`/api/maestro/historial-detalle/${archivo}`);
-            const data = await res.json();
-            
-            const visor = document.getElementById('visor-detalle');
-            let html = `<h2>Turno: ${archivo}</h2>`;
-            html += `<p>Inicio: ${new Date(data.inicio).toLocaleString()} | Fin: ${new Date(data.fin).toLocaleString()}</p><hr>`;
-            
-            data.resumenCaja.forEach(m => {
-                html += `<div class="timeline-box">
-                    <b>MESA ${m.mesa} - Total: ${m.total}€</b><br>
-                    <small>Cobró: ${m.cobradoPor} | Propina: ${m.propina}€</small><br>`;
-                m.pedido.forEach(p => {
-                    html += `<div class="producto-linea"><span>${p.nombre} <small>(${p.camarero})</small></span> <span>${p.precio}€</span></div>`;
+            try {
+                const res = await fetch(`/api/maestro/historial-detalle/${archivo}`);
+                const data = await res.json();
+                let html = `<h2 style="font-family:'Cinzel'; color:var(--gold);">Turno: ${archivo.substring(6,16)}</h2>`;
+                
+                data.resumenCaja.forEach(t => {
+                    const cocina = t.pedido.filter(p => p.prioridad <= 3);
+                    const extras = t.pedido.filter(p => p.prioridad > 3);
+
+                    html += `<div class="ticket-audit">
+                                <div class="ticket-header-audit">
+                                    <span style="font-size:1.2rem; color:var(--gold);"><b>MESA ${t.mesa}</b></span>
+                                    <span style="font-size:0.8em; opacity:0.6;">${t.metodo} | ${t.cobradoPor}</span>
+                                </div>`;
+                    
+                    if(cocina.length > 0) {
+                        html += `<div class="seccion-comanda prio-cocina" style="padding:5px 10px;">`;
+                        cocina.forEach(p => html += `<div class="audit-line" style="font-size:0.85em;"><span>${p.nombre}</span> <span>${p.precio.toFixed(2)}€</span></div>`);
+                        html += `</div>`;
+                    }
+                    if(extras.length > 0) {
+                        html += `<div class="seccion-comanda prio-extras" style="padding:5px 10px;">`;
+                        extras.forEach(p => html += `<div class="audit-line" style="font-size:0.85em;"><span>${p.nombre}</span> <span>${p.precio.toFixed(2)}€</span></div>`);
+                        html += `</div>`;
+                    }
+                    html += `<div class="total-audit" style="font-size:1.1rem;">TOTAL: ${t.total.toFixed(2)}€</div></div>`;
                 });
-                html += `</div>`;
-            });
-            visor.innerHTML = html;
-            actualizarResumenCaja(data.resumenCaja);
+                document.getElementById('visor-detalle').innerHTML = html;
+                actualizarResumenCaja(data.resumenCaja);
+            } catch (e) { alert("Error al leer el archivo histórico."); }
         }
 
         function actualizarResumenCaja(caja) {
-            const stats = document.getElementById('visor-stats');
             const total = caja.reduce((acc, curr) => acc + parseFloat(curr.total), 0);
-            const propinas = caja.reduce((acc, curr) => acc + (parseFloat(curr.propina) || 0), 0);
-            stats.innerHTML = `
-                <div style="font-size:1.5rem; color:var(--gold); font-weight:800;">TOTAL: ${total.toFixed(2)}€</div>
-                <div style="font-size:1.1rem; margin-top:10px;">Propinas: ${propinas.toFixed(2)}€</div>
-                <div style="margin-top:10px;">Mesas atendidas: ${caja.length}</div>
+            document.getElementById('visor-stats').innerHTML = `
+                <div style="background:rgba(212,175,55,0.1); padding:20px; border-radius:15px; border:1px solid var(--gold); text-align:center; margin-bottom:20px;">
+                    <div style="font-size:0.9rem; opacity:0.7; text-transform:uppercase; letter-spacing:1px;">Total Bruto</div>
+                    <div style="font-size:2.5rem; color:var(--gold); font-weight:900;">${total.toFixed(2)}€</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333;">
+                    <span>Mesas Cerradas:</span>
+                    <span style="font-weight:800;">${caja.length}</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:10px; opacity:0.6;">
+                    <span>Ticket Medio:</span>
+                    <span>${caja.length > 0 ? (total/caja.length).toFixed(2) : '0.00'}€</span>
+                </div>
             `;
         }
 
-        async function cambiarTurno(activo) {
-            await fetch('/api/turno/estado', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ activo }) });
-            fetchData();
+        async function cambiarTurno(activo) { 
+            await fetch('/api/turno/estado', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ activo }) }); 
+            fetchData(); 
         }
-        function confirmarCierre() { if(confirm("¿Cerrar turno? Los datos se guardarán en el historial.")) cambiarTurno(false); }
+        function confirmarCierre() { if(confirm("¿Deseas cerrar la caja? Se generará un informe histórico.")) cambiarTurno(false); }
 
-        setInterval(fetchData, 3000);
+        setInterval(fetchData, 4000);
         actualizarReloj();
         fetchData();
     </script>

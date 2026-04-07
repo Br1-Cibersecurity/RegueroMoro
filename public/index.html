@@ -12,99 +12,51 @@
             --panel-white: #ffffff;
             --success: #2e7d32; --info: #1565c0; --danger: #c62828;
         }
-
-        body {
-            font-family: 'Montserrat', sans-serif; margin: 0; display: flex;
-            height: 100vh; background: radial-gradient(circle at 40% 50%, var(--bg-accent) 0%, var(--bg-deep) 100%);
-            color: white; overflow: hidden;
-        }
-
-        /* LOGIN */
-        #login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-deep); z-index: 5000; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-        }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; display: flex; height: 100vh; background: radial-gradient(circle at 40% 50%, var(--bg-accent) 0%, var(--bg-deep) 100%); color: white; overflow: hidden; }
+        #login-overlay { position: fixed; inset: 0; background: var(--bg-deep); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .camarero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
-        .btn-camarero {
-            padding: 25px 40px; background: linear-gradient(145deg, #2a2f35, #14181c);
-            border: 2px solid var(--gold); border-radius: 15px; color: var(--gold);
-            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s;
-        }
+        .btn-camarero { padding: 25px 40px; background: linear-gradient(145deg, #2a2f35, #14181c); border: 2px solid var(--gold); border-radius: 15px; color: var(--gold); font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .btn-camarero:hover { background: var(--gold); color: black; transform: scale(1.05); }
-
-        .marca-agua-central {
-            position: fixed; top: 55%; left: 35%; transform: translate(-50%, -50%);
-            width: 500px; height: 500px; background: url('logo.png') center/contain no-repeat;
-            opacity: 0.12; filter: invert(1) brightness(0.7); pointer-events: none; z-index: 0;
-        }
-
-        /* ESTRUCTURA */
+        .marca-agua-central { position: fixed; top: 55%; left: 35%; transform: translate(-50%, -50%); width: 500px; height: 500px; background: url('logo.png') center/contain no-repeat; opacity: 0.12; filter: invert(1) brightness(0.7); pointer-events: none; z-index: 0; }
         #panel-seleccion { flex: 2.5; padding: 40px; overflow-y: auto; z-index: 2; position: relative; }
         .header-app { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(212,175,55,0.3); padding-bottom: 15px; margin-bottom: 20px; }
         .header-app h1 { font-family: 'Cinzel'; color: var(--gold); margin: 0; font-size: 1.8rem; }
         .logo-superior { height: 65px; filter: invert(1) drop-shadow(0 0 10px var(--gold)); }
-
-        .search-bar { 
-            width: 100%; padding: 18px; border-radius: 15px; background: rgba(0,0,0,0.5); 
-            border: 1px solid var(--gold); color: white; font-size: 1rem; margin-bottom: 20px; box-sizing: border-box;
-        }
-
+        .search-bar { width: 100%; padding: 18px; border-radius: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--gold); color: white; font-size: 1rem; margin-bottom: 20px; box-sizing: border-box; }
         .zona-titulo { width: 100%; color: var(--gold); border-bottom: 1px solid rgba(212,175,55,0.2); margin: 25px 0 15px; font-family: 'Cinzel'; text-transform: uppercase; letter-spacing: 2px; }
         .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
         
-        .btn-item {
-            padding: 25px 15px; background: linear-gradient(145deg, #2a2f35, #14181c);
-            border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px;
-            color: white; font-weight: 700; cursor: pointer; text-transform: uppercase;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.4); transition: 0.2s;
-        }
+        .btn-item { padding: 25px 15px; background: linear-gradient(145deg, #2a2f35, #14181c); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; color: white; font-weight: 700; cursor: pointer; text-transform: uppercase; box-shadow: 5px 5px 15px rgba(0,0,0,0.4); transition: 0.2s; }
         .btn-item:hover { border-color: var(--gold); transform: translateY(-3px); }
-        .btn-item.ocupada { border-color: var(--danger); background: #331a1a; }
+        .btn-item.ocupada { border-color: var(--danger) !important; background: #331a1a !important; color: #ff8a80 !important; }
+        .btn-item.cobrada { border-color: var(--success) !important; background: #1b2e1c !important; color: #81c784 !important; }
 
         .nav-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .btn-nav { padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; border: 1px solid #666; color: white; text-transform: uppercase; }
         .btn-back { background: #333; }
         .btn-home { background: #000; border-color: var(--gold); color: var(--gold); }
-
-        /* TICKET */
-        #panel-comanda {
-            flex: 1; background: var(--panel-white); color: #1a1a1a; margin: 20px;
-            border-radius: 35px; display: flex; flex-direction: column;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 3; overflow: hidden;
-            border-left: 10px solid var(--gold);
-        }
-        .ticket-header { padding: 25px; background: #000; color: var(--gold); text-align: center; font-family: 'Cinzel'; font-size: 1.2rem; }
+        #panel-comanda { flex: 1; background: var(--panel-white); color: #1a1a1a; margin: 20px; border-radius: 35px; display: flex; flex-direction: column; box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 3; overflow: hidden; border-left: 10px solid var(--gold); }
+        .ticket-header { padding: 20px; background: #000; color: var(--gold); text-align: center; font-family: 'Cinzel'; font-size: 1.2rem; }
         #lista-comanda { flex-grow: 1; padding: 20px; overflow-y: auto; font-weight: 600; }
-        .ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .btn-remove { background: var(--danger); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin-left: 10px; font-weight: 800; }
-
+        .zona-ticket { margin-bottom: 15px; padding-bottom: 10px; }
+        .zona-ticket h4 { margin: 0 0 10px 0; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: #f9f9f9; border-radius: 8px; margin-bottom: 5px; }
+        .btn-accion-ticket { border: none; border-radius: 5px; padding: 6px 10px; cursor: pointer; margin-left: 5px; font-weight: 900; color: white; }
+        .btn-remove { background: var(--danger); }
         .total-box { padding: 30px; background: #f8f9fa; border-top: 2px solid var(--gold); }
         .total-box h2 { display: flex; justify-content: space-between; margin: 0 0 15px; font-size: 2.2rem; font-weight: 900; }
         .btn-accion { width: 100%; padding: 20px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; border: none; margin-bottom: 10px; }
+        .btn-pedir { background: #333; color: white; }
         .btn-cobrar { background: var(--gold); color: black; }
-
-        /* MODALES */
-        #modal-pago, #modal-puntos, #modal-calsotada {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 6000; display: none;
-            align-items: center; justify-content: center; backdrop-filter: blur(10px);
-        }
-        .modal-content {
-            background: white; padding: 45px; border-radius: 40px;
-            color: #1a1a1a; text-align: center; width: 450px;
-            box-shadow: 0 0 60px rgba(212, 175, 55, 0.5); border-bottom: 15px solid var(--gold);
-        }
-        .btn-punto, .btn-cals-choice {
-            padding: 20px; background: linear-gradient(145deg, #222, #000);
-            border: 2px solid var(--gold); border-radius: 20px; color: var(--gold);
-            font-size: 1.2rem; font-weight: 800; cursor: pointer; width: 100%;
-            margin: 8px 0; transition: 0.3s;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 6000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: white; padding: 45px; border-radius: 40px; color: #1a1a1a; text-align: center; width: 450px; box-shadow: 0 0 60px rgba(212, 175, 55, 0.5); border-bottom: 15px solid var(--gold); }
+        .btn-punto { padding: 20px; background: linear-gradient(145deg, #222, #000); border: 2px solid var(--gold); border-radius: 20px; color: var(--gold); font-size: 1.2rem; font-weight: 800; cursor: pointer; width: 100%; margin: 8px 0; transition: 0.3s; }
+        .input-gigante { font-size: 4rem; width: 120px; text-align: center; border: 3px solid var(--gold); border-radius: 15px; font-family: 'Montserrat'; font-weight: 900; }
+        .btn-redondo { width: 60px; height: 60px; border-radius: 50%; font-size: 2rem; font-weight: 900; border: none; background: #333; color: white; cursor: pointer; }
+        .btn-doblar { background: var(--gold); color: black; padding: 20px; border-radius: 15px; font-weight: 800; border: none; cursor: pointer; margin-top: 20px; width: 100%; text-transform: uppercase; font-size: 1.2rem; box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
     </style>
 </head>
 <body>
-
     <div id="login-overlay">
         <h1 style="font-family: 'Cinzel'; color: var(--gold); font-size: 3.5rem;">REGUERO MORO</h1>
         <div class="camarero-grid">
@@ -115,9 +67,7 @@
             <button class="btn-camarero" onclick="login('Aitana')">Aitana</button>
         </div>
     </div>
-
     <div class="marca-agua-central"></div>
-
     <div id="panel-seleccion">
         <div class="header-app">
             <h1 id="titulo-header">SISTEMA GESTIÓN</h1>
@@ -126,7 +76,6 @@
                 <img src="logo.png" class="logo-superior">
             </div>
         </div>
-        
         <input type="text" class="search-bar" id="buscador" placeholder="🔍 BUSCAR PLATO O BEBIDA..." oninput="filtrarGlobal(this.value)">
         <div id="nav-superior" style="display:none;" class="nav-buttons">
             <button class="btn-nav btn-back" onclick="atras()">⬅ VOLVER ATRÁS</button>
@@ -134,9 +83,8 @@
         </div>
         <div id="contenido-dinamico"></div>
     </div>
-
     <div id="panel-comanda">
-        <div class="ticket-header">MESA: <span id="num-mesa">-</span></div>
+        <div class="ticket-header">MESA: <span id="num-mesa">-</span> | PAX: <span id="num-pax">-</span></div>
         <div id="lista-comanda"></div>
         <div class="total-box">
             <h2><span>TOTAL</span> <span id="total-precio">0.00€</span></h2>
@@ -147,7 +95,37 @@
         </div>
     </div>
 
-    <div id="modal-puntos">
+    <div id="modal-pax" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="font-family: 'Cinzel'; color: #888;">MESA <span id="pax-mesa-target"></span></h2>
+            <h3>¿Cuántos comensales son?</h3>
+            <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin: 20px 0;">
+                <button class="btn-redondo" onclick="cambiarPax(-1)">-</button>
+                <input type="number" id="input-pax" value="1" class="input-gigante">
+                <button class="btn-redondo" onclick="cambiarPax(1)">+</button>
+            </div>
+            <button class="btn-punto" style="background:var(--gold); color:black;" onclick="confirmarPax()">ABRIR MESA</button>
+            <button style="margin-top:20px; background:none; border:none; color:#bbb; cursor:pointer;" onclick="document.getElementById('modal-pax').style.display='none'">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modal-cobro" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="font-family: 'Cinzel'; color: var(--gold);">FINALIZAR CUENTA</h2>
+            <p style="font-size: 1.2rem; font-weight: 800;">Total Mesa: <span id="pago-total-display">0.00€</span></p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                <button class="btn-punto" onclick="confirmarCobroFinal('Efectivo')">💵 EFECTIVO</button>
+                <button class="btn-punto" onclick="confirmarCobroFinal('Tarjeta')">💳 TARJETA</button>
+            </div>
+            <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
+                <label style="display:block; margin-bottom:10px; font-weight:700;">AÑADIR PROPINA:</label>
+                <input type="number" id="propina-input" value="0" class="input-gigante" style="width: 100%; font-size: 2rem;">
+            </div>
+            <button style="margin-top:25px; background:none; border:none; color:var(--danger); font-weight:800; cursor:pointer;" onclick="document.getElementById('modal-cobro').style.display='none'">CANCELAR</button>
+        </div>
+    </div>
+
+    <div id="modal-puntos" class="modal-overlay">
         <div class="modal-content">
             <h2 style="font-family: 'Cinzel'; color: #888;" id="punto-nombre-plato">CARNE</h2>
             <button class="btn-punto" onclick="seleccionarPunto('Punto menos')">Punto menos</button>
@@ -157,38 +135,33 @@
         </div>
     </div>
 
-    <div id="modal-calsotada">
-        <div class="modal-content">
-            <h2 style="font-family: 'Cinzel'; color: #888;">MENÚ CALÇOTADA</h2>
-            <button class="btn-cals-choice" onclick="verificarPunto('Lomo Bajo (Menu Calçotada)', 0)">Lomo Bajo de Vaca</button>
-            <button class="btn-cals-choice" onclick="finalizarCalsotada('Costilla de cerdo')">Costilla de cerdo</button>
-            <button class="btn-cals-choice" onclick="finalizarCalsotada('Lubina a la brasa')">Lubina a la brasa</button>
-        </div>
-    </div>
-
     <script>
         let carta = {}, mesasVivas = [], mesaActiva = null, camareroActivo = "", historialNav = [];
-        let productoPendientePunto = null;
-        let bloqueoSincronizacion = false;
+        let productoPendientePunto = null, bloqueoSincronizacion = false, mesaAperturaTemp = null;
         const PRODUCTOS_CON_PUNTO = ["Solomillo", "Lomo bajo", "Picaña"];
+        let timerInactividad;
+
+        function reiniciarInactividad() {
+            clearTimeout(timerInactividad);
+            timerInactividad = setTimeout(() => { if (mesaActiva) mostrarMapaMesas(); }, 45000);
+        }
+
+        document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden' && mesaActiva) mostrarMapaMesas(); });
+        window.addEventListener('touchstart', reiniciarInactividad);
+        window.addEventListener('click', reiniciarInactividad);
 
         async function login(nombre) {
             camareroActivo = nombre;
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('display-camarero').innerText = "Atiende: " + nombre;
-            
             try {
                 const resCarta = await fetch('/api/carta');
                 carta = await resCarta.json();
-            } catch(e) {
-                console.error("Error crítico cargando carta:", e);
-                alert("Error conectando con el servidor. Por favor, recarga la página.");
-                return;
-            }
-            
+            } catch(e) { alert("Error conectando con el servidor."); return; }
             await sincronizar();
             mostrarMapaMesas();
             setInterval(sincronizar, 3000);
+            reiniciarInactividad();
         }
 
         async function sincronizar() {
@@ -197,214 +170,207 @@
                 const r = await fetch('/api/maestro/status');
                 const data = await r.json();
                 mesasVivas = data.mesasVivas || [];
-                
-                if(!mesaActiva) {
-                    actualizarColoresMesas();
-                } else {
+                if(!mesaActiva) actualizarColoresMesas();
+                else {
                     const mesaData = mesasVivas.find(m => m.id === mesaActiva);
-                    actualizarTicketVisual(mesaData ? mesaData.pedido : []);
+                    if (mesaData) actualizarTicketVisual(mesaData.pedido, mesaData.pax);
                 }
-            } catch (e) { console.error("Error sincronización"); }
+            } catch (e) {}
+        }
+
+        async function fijarNuevosSilencioso() {
+            if (!mesaActiva) return;
+            const mesaData = mesasVivas.find(m => m.id === mesaActiva);
+            if (!mesaData) return;
+            let hayCambios = false;
+            mesaData.pedido.forEach(p => { if (!p.estado || p.estado === 'nuevo') { p.estado = 'guardado'; hayCambios = true; } });
+            if (hayCambios) {
+                await fetch('/api/mesas/actualizar', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ mesa: mesaActiva, pedido: mesaData.pedido, camarero: camareroActivo, operacion: 'sobrescribir' })
+                });
+            }
         }
 
         function mostrarMapaMesas() {
+            if (mesaActiva) fijarNuevosSilencioso();
             mesaActiva = null; historialNav = [];
             document.getElementById('num-mesa').innerText = "-";
+            document.getElementById('num-pax').innerText = "-";
             document.getElementById('nav-superior').style.display = 'none';
-            
-            // SOLUCIÓN: Usar un constructor de texto (String Builder) para evitar roturas del DOM
             let constructorHTML = "";
             const zonas = [
                 { nombre: "COMEDOR PRINCIPAL", mesas: ["1","2","3","4","5","6","7","8"] },
+                { nombre: "COMEDOR PEQUEÑO 1", mesas: ["C1-1", "C1-2"] },
+                { nombre: "COMEDOR PEQUEÑO 2", mesas: ["C2-1", "C2-2"] },
                 { nombre: "PORCHE", mesas: ["30","31","32","33","34"] },
                 { nombre: "TERRAZA", mesas: ["40","41","42","43","44","45","50","51","52","53","54","55","56"] }
             ];
-            
             zonas.forEach(z => {
                 constructorHTML += `<div class="zona-titulo">${z.nombre}</div><div class="grid-layout">`;
                 z.mesas.forEach(m => {
                     const viva = mesasVivas.find(mv => mv.id === m);
-                    constructorHTML += `<button id="btn-mesa-${m}" class="btn-item ${viva?'ocupada':''}" onclick="seleccionarMesa('${m}')">Mesa ${m}${viva?'<br><small>'+viva.ultimaMod+'</small>':''}</button>`;
+                    let clase = ""; let sub = "";
+                    if (viva && viva.estadoInterno === 'cobrada') { clase = "cobrada"; sub = `<br><small>COBRADA</small>`; }
+                    else if (viva) { clase = "ocupada"; sub = `<br><small>${viva.ultimaMod}</small>`; }
+                    constructorHTML += `<button id="btn-mesa-${m}" class="btn-item ${clase}" onclick="clickMesa('${m}')">Mesa ${m}${sub}</button>`;
                 });
                 constructorHTML += `</div>`;
             });
-            
             document.getElementById('contenido-dinamico').innerHTML = constructorHTML;
-            actualizarTicketVisual([]);
+            actualizarTicketVisual([], '-');
         }
 
         function actualizarColoresMesas() {
-            // SOLUCIÓN: Limpiar colores viejos si la mesa se ha cobrado y cobrar los nuevos
             document.querySelectorAll('.btn-item').forEach(btn => {
-                if (btn.id && btn.id.startsWith('btn-mesa-')) {
-                    const idMesa = btn.id.replace('btn-mesa-', '');
-                    const viva = mesasVivas.find(mv => mv.id === idMesa);
-                    if (viva) {
-                        btn.classList.add('ocupada');
-                        btn.innerHTML = `Mesa ${idMesa}<br><small>${viva.ultimaMod}</small>`;
-                    } else {
-                        btn.classList.remove('ocupada');
-                        btn.innerHTML = `Mesa ${idMesa}`;
-                    }
-                }
+                const idMesa = btn.id.replace('btn-mesa-', '');
+                const viva = mesasVivas.find(mv => mv.id === idMesa);
+                btn.classList.remove('ocupada', 'cobrada');
+                if (viva && viva.estadoInterno === 'cobrada') { btn.classList.add('cobrada'); btn.innerHTML = `Mesa ${idMesa}<br><small>COBRADA</small>`; }
+                else if (viva) { btn.classList.add('ocupada'); btn.innerHTML = `Mesa ${idMesa}<br><small>${viva.ultimaMod}</small>`; }
+                else { btn.innerHTML = `Mesa ${idMesa}`; }
             });
         }
 
-        function seleccionarMesa(id) {
-            mesaActiva = id;
-            document.getElementById('num-mesa').innerText = id;
-            document.getElementById('nav-superior').style.display = 'grid';
+        function clickMesa(id) {
             const mesaData = mesasVivas.find(m => m.id === id);
-            actualizarTicketVisual(mesaData ? mesaData.pedido : []);
-            navegar(carta, "CARTA");
-        }
-
-        function navegar(obj, titulo) {
-            historialNav.push({obj, titulo});
-            renderizarPagina(obj, titulo);
-        }
-
-        function atras() { 
-            historialNav.pop(); 
-            if(historialNav.length === 0) {
-                mostrarMapaMesas(); 
-            } else {
-                const anterior = historialNav[historialNav.length - 1];
-                renderizarPagina(anterior.obj, anterior.titulo);
+            if (mesaData) entrarEnMesa(id, mesaData.pax);
+            else { 
+                mesaAperturaTemp = id; 
+                document.getElementById('pax-mesa-target').innerText = id; 
+                document.getElementById('input-pax').value = 1; 
+                document.getElementById('modal-pax').style.display = 'flex'; 
             }
         }
+
+        // --- GESTIÓN PAX RESTABLECIDA ---
+        function cambiarPax(val) {
+            const input = document.getElementById('input-pax');
+            let actual = parseInt(input.value) || 1;
+            if (actual + val >= 1) input.value = actual + val;
+        }
+
+        async function confirmarPax() {
+            const pax = parseInt(document.getElementById('input-pax').value) || 1;
+            document.getElementById('modal-pax').style.display = 'none';
+            bloqueoSincronizacion = true;
+            await fetch('/api/mesas/actualizar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mesa: mesaAperturaTemp, pax: pax, pedido: [], camarero: camareroActivo, operacion: 'iniciar' }) });
+            bloqueoSincronizacion = false;
+            entrarEnMesa(mesaAperturaTemp, pax);
+        }
+
+        async function entrarEnMesa(id, pax) {
+            mesaActiva = id; document.getElementById('num-mesa').innerText = id; document.getElementById('num-pax').innerText = pax;
+            document.getElementById('nav-superior').style.display = 'grid';
+            const mesaData = mesasVivas.find(m => m.id === id);
+            if (mesaData && mesaData.estadoInterno === 'cobrada') {
+                document.getElementById('contenido-dinamico').innerHTML = `
+                    <div style="text-align:center; padding:100px 20px;">
+                        <h2 style="color:var(--success); font-family:'Cinzel'; font-size:2.5rem;">MESA COBRADA</h2>
+                        <button class="btn-doblar" onclick="doblarMesa('${id}')">➕ DOBLAR MESA</button>
+                    </div>`;
+            } else { await sincronizar(); navegar(carta, "CARTA"); }
+            reiniciarInactividad();
+        }
+
+        async function doblarMesa(id) {
+            await fetch('/api/mesas/doblar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mesa: id }) });
+            mostrarMapaMesas();
+        }
+
+        function navegar(obj, titulo) { historialNav.push({obj, titulo}); renderizarPagina(obj, titulo); }
+        function atras() { historialNav.pop(); if(historialNav.length === 0) mostrarMapaMesas(); else renderizarPagina(historialNav[historialNav.length-1].obj, historialNav[historialNav.length-1].titulo); }
 
         function renderizarPagina(items, titulo) {
             let constructorHTML = `<div class="zona-titulo">${titulo}</div><div class="grid-layout">`;
-            
-            if (Array.isArray(items)) {
-                items.forEach(p => {
-                    constructorHTML += `<button class="btn-item" onclick="identificarProducto('${p.nombre}', ${p.precio})">${p.nombre}<br><small>${p.precio.toFixed(2)}€</small></button>`;
-                });
-            } else {
-                Object.keys(items).forEach(cat => {
-                    if(cat === "prioridad") return;
-                    constructorHTML += `<button class="btn-item" style="border-color:var(--gold)" onclick="navegar(cartaClick('${cat}'), '${cat}')">${cat}</button>`;
-                });
-            }
-            
-            constructorHTML += `</div>`;
-            document.getElementById('contenido-dinamico').innerHTML = constructorHTML;
+            if (Array.isArray(items)) items.forEach(p => { const prio = p.prioridad || 4; constructorHTML += `<button class="btn-item" onclick="identificarProducto('${p.nombre}', ${p.precio}, ${prio})">${p.nombre}<br><small>${p.precio.toFixed(2)}€</small></button>`; });
+            else Object.keys(items).forEach(cat => { if(cat !== "prioridad") constructorHTML += `<button class="btn-item" style="border-color:var(--gold)" onclick="navegar(cartaClick('${cat}'), '${cat}')">${cat}</button>`; });
+            document.getElementById('contenido-dinamico').innerHTML = constructorHTML + "</div>";
         }
 
         function cartaClick(key) {
-            const buscar = (obj) => {
-                if (obj[key]) return obj[key];
-                for (let k in obj) {
-                    if (typeof obj[k] === 'object' && !Array.isArray(obj[k])) {
-                        const r = buscar(obj[k]);
-                        if (r) return r;
-                    }
-                }
-                return null;
-            };
+            const buscar = (obj) => { if (obj[key]) return obj[key]; for (let k in obj) { if (typeof obj[k] === 'object' && !Array.isArray(obj[k])) { const r = buscar(obj[k]); if (r) return r; } } return null; };
             return buscar(carta) || [];
         }
 
-        function identificarProducto(nombre, precio) {
+        function identificarProducto(nombre, precio, prioridad) {
+            reiniciarInactividad();
             const nLower = nombre.toLowerCase();
-            if(nLower.includes('carnivoro')) verificarPunto('Menú Carnívoro', precio);
-            else if(nLower.includes('calsotada')) document.getElementById('modal-calsotada').style.display = 'flex';
-            else verificarPunto(nombre, precio);
-        }
-
-        function verificarPunto(nombre, precio) {
-            const necesitaPunto = PRODUCTOS_CON_PUNTO.some(c => nombre.toLowerCase().includes(c.toLowerCase())) || nombre.includes('Carnívoro');
-            if(necesitaPunto) {
-                productoPendientePunto = { nombre, precio };
+            if(nLower.includes('carnivoro') || PRODUCTOS_CON_PUNTO.some(c => nLower.includes(c.toLowerCase()))) {
+                productoPendientePunto = { nombre, precio, prioridad };
                 document.getElementById('punto-nombre-plato').innerText = nombre.toUpperCase();
                 document.getElementById('modal-puntos').style.display = 'flex';
-            } else enviarCambioServidor(nombre, precio);
+            } else enviarCambioServidor(nombre, precio, prioridad);
         }
 
-        function seleccionarPunto(punto) { enviarCambioServidor(`${productoPendientePunto.nombre} [${punto}]`, productoPendientePunto.precio); cerrarModalesCarne(); }
-        function omitirPunto() { enviarCambioServidor(productoPendientePunto.nombre, productoPendientePunto.precio); cerrarModalesCarne(); }
-        function cerrarModalesCarne() { document.getElementById('modal-puntos').style.display = 'none'; document.getElementById('modal-calsotada').style.display = 'none'; productoPendientePunto = null; }
-        function finalizarCalsotada(plato) { enviarCambioServidor(`Menú Calçotada (${plato})`, 76.00); cerrarModalesCarne(); }
+        function seleccionarPunto(punto) { enviarCambioServidor(`${productoPendientePunto.nombre} [${punto}]`, productoPendientePunto.precio, productoPendientePunto.prioridad); document.getElementById('modal-puntos').style.display='none'; }
+        function omitirPunto() { enviarCambioServidor(productoPendientePunto.nombre, productoPendientePunto.precio, productoPendientePunto.prioridad); document.getElementById('modal-puntos').style.display='none'; }
 
-        async function enviarCambioServidor(nombre, precio) {
-            const itemNuevo = { nombre, precio, idUnico: Date.now() + Math.random(), camarero: camareroActivo };
-            const mesaData = mesasVivas.find(m => m.id === mesaActiva);
-            let pedidoNuevo = mesaData ? [...mesaData.pedido, itemNuevo] : [itemNuevo];
-            
-            actualizarTicketVisual(pedidoNuevo);
-            
-            await fetch('/api/mesas/actualizar', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ mesa: mesaActiva, pedido: [itemNuevo], camarero: camareroActivo, operacion: 'añadir' })
-            });
-            
-            if(mesaData) mesaData.pedido = pedidoNuevo;
-            else mesasVivas.push({id: mesaActiva, pedido: pedidoNuevo, ultimaMod: camareroActivo});
+        async function enviarCambioServidor(nombre, precio, prioridad) {
+            const itemNuevo = { nombre, precio, prioridad, idUnico: Date.now() + Math.random(), camarero: camareroActivo, estado: 'nuevo' };
+            await fetch('/api/mesas/actualizar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mesa: mesaActiva, pedido: [itemNuevo], camarero: camareroActivo, operacion: 'añadir' }) });
+            sincronizar();
         }
 
         async function eliminarProducto(idUnico) {
-            bloqueoSincronizacion = true;
+            reiniciarInactividad(); bloqueoSincronizacion = true;
             const mesaData = mesasVivas.find(m => m.id === mesaActiva);
             if (!mesaData) return;
-            
             const nuevoPedido = mesaData.pedido.filter(i => i.idUnico !== idUnico);
-            actualizarTicketVisual(nuevoPedido);
-            
-            await fetch('/api/mesas/actualizar', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ mesa: mesaActiva, pedido: nuevoPedido, camarero: camareroActivo, operacion: 'borrar' })
-            });
-            
-            mesaData.pedido = nuevoPedido;
-            setTimeout(() => { bloqueoSincronizacion = false; }, 2000);
+            await fetch('/api/mesas/actualizar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mesa: mesaActiva, pedido: nuevoPedido, camarero: camareroActivo, operacion: 'sobrescribir' }) });
+            bloqueoSincronizacion = false; sincronizar();
         }
 
-        function actualizarTicketVisual(pedido) {
+        function actualizarTicketVisual(pedido, pax) {
             const lista = document.getElementById('lista-comanda');
-            lista.innerHTML = ''; let total = 0;
+            let htmlNuevos = '', htmlCocina = '', htmlExtras = '', total = 0;
             pedido.forEach(i => {
                 total += i.precio;
-                lista.innerHTML += `<div class="ticket-item"><span>${i.nombre}</span><div><b>${i.precio.toFixed(2)}€</b><button class="btn-remove" onclick="eliminarProducto(${i.idUnico})">✕</button></div></div>`;
+                let item = `<div class="ticket-item"><span>${i.nombre}</span><div><b>${i.precio.toFixed(2)}€</b><button class="btn-accion-ticket btn-remove" onclick="eliminarProducto(${i.idUnico})">✕</button></div></div>`;
+                if (!i.estado || i.estado === 'nuevo') htmlNuevos += item;
+                else if (i.estado === 'impreso') htmlCocina += item;
+                else if (i.estado === 'guardado') htmlExtras += item;
             });
+            lista.innerHTML = (htmlNuevos?`<div class=\"zona-ticket\"><h4 style=\"color:var(--gold)\">🟡 NUEVOS</h4>${htmlNuevos}</div>`:'') + (htmlCocina?`<div class=\"zona-ticket\"><h4 style=\"color:var(--success)\">🟢 COCINA</h4>${htmlCocina}</div>`:'') + (htmlExtras?`<div class=\"zona-ticket\"><h4 style=\"color:var(--info)\">🔵 EXTRAS</h4>${htmlExtras}</div>`:'');
             document.getElementById('total-precio').innerText = total.toFixed(2) + "€";
+            if(pax) document.getElementById('num-pax').innerText = pax;
         }
 
-        async function imprimirComanda() { 
+        async function imprimirComanda() {
             const mesaData = mesasVivas.find(m => m.id === mesaActiva);
             if(!mesaData) return;
-            await fetch('/api/imprimir/comanda', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ mesa: mesaActiva, pedido: mesaData.pedido, camarero: camareroActivo })
-            });
-            alert("🖨️ Enviado a impresora"); 
+            const items = mesaData.pedido.filter(i => !i.estado || i.estado === 'nuevo');
+            if(items.length === 0) return;
+            mesaData.pedido.forEach(i => { if (!i.estado || i.estado === 'nuevo') i.estado = 'impreso'; });
+            await fetch('/api/mesas/actualizar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mesa: mesaActiva, pedido: mesaData.pedido, camarero: camareroActivo, operacion: 'sobrescribir' }) });
+            await fetch('/api/imprimir/comanda', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mesa: mesaActiva, pax: mesaData.pax, pedidoNuevos: items, camarero: camareroActivo }) });
+            sincronizar();
         }
 
-        function abrirSelectorPago() { alert("El cobro se realiza desde el Panel Maestro."); }
-        
+        // --- APERTURA DE MODAL COBRO (RESTABLECIDO) ---
+        function abrirSelectorPago() {
+            const mesaData = mesasVivas.find(m => m.id === mesaActiva);
+            if (!mesaData || mesaData.pedido.length === 0) { alert("Mesa vacía"); return; }
+            document.getElementById('pago-total-display').innerText = mesaData.pedido.reduce((acc, p) => acc + p.precio, 0).toFixed(2) + "€";
+            document.getElementById('propina-input').value = 0;
+            document.getElementById('modal-cobro').style.display = 'flex';
+        }
+
+        // --- CIERRE FINAL CON PROPINA ---
+        async function confirmarCobroFinal(metodo) {
+            const propina = parseFloat(document.getElementById('propina-input').value) || 0;
+            const mesaOriginal = JSON.parse(JSON.stringify(mesasVivas.find(m => m.id === mesaActiva)));
+            if(!mesaOriginal) return;
+            if (propina > 0) mesaOriginal.pedido.push({ nombre: "PROPINA", precio: propina, estado: 'guardado', idUnico: Date.now(), camarero: camareroActivo });
+            await fetch('/api/caja/cierre', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mesa: mesaActiva, total: mesaOriginal.pedido.reduce((acc, p) => acc + p.precio, 0), metodo, propina, camarero: camareroActivo, pedido: mesaOriginal.pedido }) });
+            document.getElementById('modal-cobro').style.display = 'none';
+            mostrarMapaMesas();
+        }
+
         function filtrarGlobal(v) { 
-            if(!v) {
-                if(historialNav.length > 0) {
-                    const anterior = historialNav[historialNav.length - 1];
-                    renderizarPagina(anterior.obj, anterior.titulo);
-                } else {
-                    mostrarMapaMesas();
-                }
-                return;
-            }
-            let todos = [];
-            const aplanar = (obj) => {
-                for(let k in obj) {
-                    if(Array.isArray(obj[k])) todos = todos.concat(obj[k]);
-                    else if(typeof obj[k] === 'object') aplanar(obj[k]);
-                }
-            }
-            aplanar(carta);
-            const filtrados = todos.filter(p => p.nombre.toLowerCase().includes(v.toLowerCase()));
-            renderizarPagina(filtrados, "RESULTADOS");
+            if(!v) { if(historialNav.length > 0) renderizarPagina(historialNav[historialNav.length-1].obj, historialNav[historialNav.length-1].titulo); else mostrarMapaMesas(); return; }
+            let todos = []; const aplanar = (obj) => { for(let k in obj) { if(Array.isArray(obj[k])) todos = todos.concat(obj[k]); else if(typeof obj[k] === 'object') aplanar(obj[k]); } };
+            aplanar(carta); renderizarPagina(todos.filter(p => p.nombre.toLowerCase().includes(v.toLowerCase())), "RESULTADOS");
         }
     </script>
 </body>
