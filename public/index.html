@@ -33,7 +33,6 @@
         }
         .btn-camarero:hover { background: var(--gold); color: black; transform: scale(1.05); }
 
-        /* MARCA DE AGUA */
         .marca-agua-central {
             position: fixed; top: 55%; left: 35%; transform: translate(-50%, -50%);
             width: 500px; height: 500px; background: url('logo.png') center/contain no-repeat;
@@ -46,7 +45,11 @@
         .header-app h1 { font-family: 'Cinzel'; color: var(--gold); margin: 0; font-size: 1.8rem; }
         .logo-superior { height: 65px; filter: invert(1) drop-shadow(0 0 10px var(--gold)); }
 
-        /* BOTONES INTERFAZ */
+        .search-bar { 
+            width: 100%; padding: 18px; border-radius: 15px; background: rgba(0,0,0,0.5); 
+            border: 1px solid var(--gold); color: white; font-size: 1rem; margin-bottom: 20px; box-sizing: border-box;
+        }
+
         .zona-titulo { width: 100%; color: var(--gold); border-bottom: 1px solid rgba(212,175,55,0.2); margin: 25px 0 15px; font-family: 'Cinzel'; text-transform: uppercase; letter-spacing: 2px; }
         .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
         
@@ -59,6 +62,11 @@
         .btn-item:hover { border-color: var(--gold); transform: translateY(-3px); }
         .btn-item.ocupada { border-color: var(--danger); background: #331a1a; }
 
+        .nav-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .btn-nav { padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; border: 1px solid #666; color: white; text-transform: uppercase; }
+        .btn-back { background: #333; }
+        .btn-home { background: #000; border-color: var(--gold); color: var(--gold); }
+
         /* TICKET */
         #panel-comanda {
             flex: 1; background: var(--panel-white); color: #1a1a1a; margin: 20px;
@@ -68,39 +76,31 @@
         }
         .ticket-header { padding: 25px; background: #000; color: var(--gold); text-align: center; font-family: 'Cinzel'; font-size: 1.2rem; }
         #lista-comanda { flex-grow: 1; padding: 20px; overflow-y: auto; font-weight: 600; }
-        .ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
-        .btn-remove { background: var(--danger); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; }
+        .ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .btn-remove { background: var(--danger); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin-left: 10px; font-weight: 800; }
 
         .total-box { padding: 30px; background: #f8f9fa; border-top: 2px solid var(--gold); }
         .total-box h2 { display: flex; justify-content: space-between; margin: 0 0 15px; font-size: 2.2rem; font-weight: 900; }
-        
         .btn-accion { width: 100%; padding: 20px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; border: none; margin-bottom: 10px; }
-        .btn-pedir { background: #333; color: white; }
         .btn-cobrar { background: var(--gold); color: black; }
 
-        /* MODAL PAGO CORREGIDO */
-        #modal-pago {
+        /* MODALES */
+        #modal-pago, #modal-puntos, #modal-calsotada {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 6000; display: none;
             align-items: center; justify-content: center; backdrop-filter: blur(10px);
         }
-        .pago-container {
+        .modal-content {
             background: white; padding: 45px; border-radius: 40px;
             color: #1a1a1a; text-align: center; width: 450px;
             box-shadow: 0 0 60px rgba(212, 175, 55, 0.5); border-bottom: 15px solid var(--gold);
         }
-
-        /* Botones de Pago con Estética Reguero Moro */
-        .btn-metodo-elite {
-            padding: 25px; background: linear-gradient(145deg, #222, #000);
+        .btn-punto, .btn-cals-choice {
+            padding: 20px; background: linear-gradient(145deg, #222, #000);
             border: 2px solid var(--gold); border-radius: 20px; color: var(--gold);
-            font-size: 1.4rem; font-weight: 800; cursor: pointer; width: 100%;
-            margin: 10px 0; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 15px;
+            font-size: 1.2rem; font-weight: 800; cursor: pointer; width: 100%;
+            margin: 8px 0; transition: 0.3s;
         }
-        .btn-metodo-elite:hover { background: var(--gold); color: black; transform: scale(1.02); }
-
-        .pregunta-seccion { display: none; flex-direction: column; gap: 15px; }
-        .input-propina { padding: 15px; font-size: 2.5rem; width: 80%; border-radius: 15px; border: 3px solid var(--gold); text-align: center; margin: 10px auto; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -126,6 +126,12 @@
                 <img src="logo.png" class="logo-superior">
             </div>
         </div>
+        
+        <input type="text" class="search-bar" id="buscador" placeholder="🔍 BUSCAR PLATO O BEBIDA..." oninput="filtrarGlobal(this.value)">
+        <div id="nav-superior" style="display:none;" class="nav-buttons">
+            <button class="btn-nav btn-back" onclick="atras()">⬅ VOLVER ATRÁS</button>
+            <button class="btn-nav btn-home" onclick="mostrarMapaMesas()">🏠 IR A MESAS</button>
+        </div>
         <div id="contenido-dinamico"></div>
     </div>
 
@@ -135,202 +141,270 @@
         <div class="total-box">
             <h2><span>TOTAL</span> <span id="total-precio">0.00€</span></h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <button class="btn-accion btn-pedir" onclick="enviarPedido()">PEDIR</button>
+                <button class="btn-accion btn-pedir" onclick="imprimirComanda()">PEDIR (🖨️)</button>
                 <button class="btn-accion btn-cobrar" onclick="abrirSelectorPago()">COBRAR</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-pago">
-        <div class="pago-container">
-            <h2 style="font-family: 'Cinzel'; color: #888;">MESA <span id="pago-mesa-num"></span></h2>
-            <h1 id="pago-total-num" style="font-size: 4rem; margin: 10px 0; font-weight: 900;">0.00€</h1>
-            
-            <div id="paso-metodo">
-                <button class="btn-metodo-elite" onclick="finalizarCobro('Efectivo')">💵 EFECTIVO</button>
-                <button class="btn-metodo-elite" onclick="chequearPropina()">💳 TARJETA</button>
-            </div>
+    <div id="modal-puntos">
+        <div class="modal-content">
+            <h2 style="font-family: 'Cinzel'; color: #888;" id="punto-nombre-plato">CARNE</h2>
+            <button class="btn-punto" onclick="seleccionarPunto('Punto menos')">Punto menos</button>
+            <button class="btn-punto" onclick="seleccionarPunto('Punto')">Punto</button>
+            <button class="btn-punto" onclick="seleccionarPunto('Punto más')">Punto más</button>
+            <button style="margin-top:20px; background:none; border:none; color:#bbb; cursor:pointer;" onclick="omitirPunto()">Omitir</button>
+        </div>
+    </div>
 
-            <div id="paso-propina" class="pregunta-seccion">
-                <h3>¿Han dejado propina?</h3>
-                <button class="btn-metodo-elite" style="background:#eee; color:#333; border:none;" onclick="finalizarCobro('Tarjeta')">NO, SOLO TICKET</button>
-                <button class="btn-metodo-elite" onclick="mostrarInputPropina()">SÍ, HAN DADO DE MÁS</button>
-            </div>
-
-            <div id="paso-importe" class="pregunta-seccion">
-                <h3>Importe TOTAL cobrado:</h3>
-                <input type="number" id="input-total-cobrado" class="input-propina" placeholder="0.00">
-                <button class="btn-metodo-elite" onclick="calcularYFinalizar()">CONFIRMAR COBRO</button>
-            </div>
-
-            <button style="margin-top:25px; background:none; border:none; color:#bbb; text-decoration:underline; cursor:pointer;" onclick="cerrarSelectorPago()">Cancelar y volver</button>
+    <div id="modal-calsotada">
+        <div class="modal-content">
+            <h2 style="font-family: 'Cinzel'; color: #888;">MENÚ CALÇOTADA</h2>
+            <button class="btn-cals-choice" onclick="verificarPunto('Lomo Bajo (Menu Calçotada)', 0)">Lomo Bajo de Vaca</button>
+            <button class="btn-cals-choice" onclick="finalizarCalsotada('Costilla de cerdo')">Costilla de cerdo</button>
+            <button class="btn-cals-choice" onclick="finalizarCalsotada('Lubina a la brasa')">Lubina a la brasa</button>
         </div>
     </div>
 
     <script>
-        let carta = {};
-        let camareroActivo = "";
-        let mesaActiva = "";
-        let mesasAbiertas = {};
+        let carta = {}, mesasVivas = [], mesaActiva = null, camareroActivo = "", historialNav = [];
+        let productoPendientePunto = null;
+        let bloqueoSincronizacion = false;
+        const PRODUCTOS_CON_PUNTO = ["Solomillo", "Lomo bajo", "Picaña"];
 
         async function login(nombre) {
             camareroActivo = nombre;
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('display-camarero').innerText = "Atiende: " + nombre;
-            await cargarCarta();
+            
+            try {
+                const resCarta = await fetch('/api/carta');
+                carta = await resCarta.json();
+            } catch(e) {
+                console.error("Error crítico cargando carta:", e);
+                alert("Error conectando con el servidor. Por favor, recarga la página.");
+                return;
+            }
+            
+            await sincronizar();
             mostrarMapaMesas();
+            setInterval(sincronizar, 3000);
         }
 
-        async function cargarCarta() {
-            const res = await fetch('/api/carta');
-            carta = await res.json();
+        async function sincronizar() {
+            if (bloqueoSincronizacion) return;
+            try {
+                const r = await fetch('/api/maestro/status');
+                const data = await r.json();
+                mesasVivas = data.mesasVivas || [];
+                
+                if(!mesaActiva) {
+                    actualizarColoresMesas();
+                } else {
+                    const mesaData = mesasVivas.find(m => m.id === mesaActiva);
+                    actualizarTicketVisual(mesaData ? mesaData.pedido : []);
+                }
+            } catch (e) { console.error("Error sincronización"); }
         }
 
         function mostrarMapaMesas() {
-            mesaActiva = "";
+            mesaActiva = null; historialNav = [];
             document.getElementById('num-mesa').innerText = "-";
-            actualizarTicket();
-            const container = document.getElementById('contenido-dinamico');
-            container.innerHTML = "";
+            document.getElementById('nav-superior').style.display = 'none';
             
+            // SOLUCIÓN: Usar un constructor de texto (String Builder) para evitar roturas del DOM
+            let constructorHTML = "";
             const zonas = [
                 { nombre: "COMEDOR PRINCIPAL", mesas: ["1","2","3","4","5","6","7","8"] },
-                { nombre: "COMEDOR PEQUEÑO 1", mesas: ["C1-1", "C1-2"] },
-                { nombre: "COMEDOR PEQUEÑO 2", mesas: ["C2-1", "C2-2"] },
                 { nombre: "PORCHE", mesas: ["30","31","32","33","34"] },
                 { nombre: "TERRAZA", mesas: ["40","41","42","43","44","45","50","51","52","53","54","55","56"] }
             ];
-
+            
             zonas.forEach(z => {
-                container.innerHTML += `<div class="zona-titulo">${z.nombre}</div>`;
-                let grid = `<div class="grid-layout">`;
+                constructorHTML += `<div class="zona-titulo">${z.nombre}</div><div class="grid-layout">`;
                 z.mesas.forEach(m => {
-                    const ocupada = (mesasAbiertas[m] && mesasAbiertas[m].length > 0) ? 'ocupada' : '';
-                    grid += `<button class="btn-item ${ocupada}" onclick="seleccionarMesa('${m}')">${m}</button>`;
+                    const viva = mesasVivas.find(mv => mv.id === m);
+                    constructorHTML += `<button id="btn-mesa-${m}" class="btn-item ${viva?'ocupada':''}" onclick="seleccionarMesa('${m}')">Mesa ${m}${viva?'<br><small>'+viva.ultimaMod+'</small>':''}</button>`;
                 });
-                grid += `</div>`;
-                container.innerHTML += grid;
+                constructorHTML += `</div>`;
+            });
+            
+            document.getElementById('contenido-dinamico').innerHTML = constructorHTML;
+            actualizarTicketVisual([]);
+        }
+
+        function actualizarColoresMesas() {
+            // SOLUCIÓN: Limpiar colores viejos si la mesa se ha cobrado y cobrar los nuevos
+            document.querySelectorAll('.btn-item').forEach(btn => {
+                if (btn.id && btn.id.startsWith('btn-mesa-')) {
+                    const idMesa = btn.id.replace('btn-mesa-', '');
+                    const viva = mesasVivas.find(mv => mv.id === idMesa);
+                    if (viva) {
+                        btn.classList.add('ocupada');
+                        btn.innerHTML = `Mesa ${idMesa}<br><small>${viva.ultimaMod}</small>`;
+                    } else {
+                        btn.classList.remove('ocupada');
+                        btn.innerHTML = `Mesa ${idMesa}`;
+                    }
+                }
             });
         }
 
-        function seleccionarMesa(numero) {
-            mesaActiva = numero;
-            document.getElementById('num-mesa').innerText = numero;
-            if (!mesasAbiertas[numero]) mesasAbiertas[numero] = [];
-            actualizarTicket();
-            renderizarCategorias(carta, "CARTA - MESA " + numero);
+        function seleccionarMesa(id) {
+            mesaActiva = id;
+            document.getElementById('num-mesa').innerText = id;
+            document.getElementById('nav-superior').style.display = 'grid';
+            const mesaData = mesasVivas.find(m => m.id === id);
+            actualizarTicketVisual(mesaData ? mesaData.pedido : []);
+            navegar(carta, "CARTA");
         }
 
-        function renderizarCategorias(contenido, titulo) {
-            const container = document.getElementById('contenido-dinamico');
-            container.innerHTML = `<button class="btn-item" onclick="mostrarMapaMesas()" style="margin-bottom:20px; background:#444;">⬅ VOLVER A MESAS</button>`;
-            container.innerHTML += `<div class="zona-titulo">${titulo}</div>`;
+        function navegar(obj, titulo) {
+            historialNav.push({obj, titulo});
+            renderizarPagina(obj, titulo);
+        }
+
+        function atras() { 
+            historialNav.pop(); 
+            if(historialNav.length === 0) {
+                mostrarMapaMesas(); 
+            } else {
+                const anterior = historialNav[historialNav.length - 1];
+                renderizarPagina(anterior.obj, anterior.titulo);
+            }
+        }
+
+        function renderizarPagina(items, titulo) {
+            let constructorHTML = `<div class="zona-titulo">${titulo}</div><div class="grid-layout">`;
             
-            let grid = `<div class="grid-layout">`;
-            if (Array.isArray(contenido)) {
-                contenido.forEach(p => {
-                    grid += `<button class="btn-item" onclick="añadirProducto('${p.nombre}', ${p.precio})">${p.nombre}<br><small>${p.precio.toFixed(2)}€</small></button>`;
+            if (Array.isArray(items)) {
+                items.forEach(p => {
+                    constructorHTML += `<button class="btn-item" onclick="identificarProducto('${p.nombre}', ${p.precio})">${p.nombre}<br><small>${p.precio.toFixed(2)}€</small></button>`;
                 });
             } else {
-                Object.keys(contenido).forEach(cat => {
+                Object.keys(items).forEach(cat => {
                     if(cat === "prioridad") return;
-                    grid += `<button class="btn-item" style="border-color:var(--gold);" onclick="navegarCategoria('${cat}')">${cat}</button>`;
+                    constructorHTML += `<button class="btn-item" style="border-color:var(--gold)" onclick="navegar(cartaClick('${cat}'), '${cat}')">${cat}</button>`;
                 });
             }
-            grid += `</div>`;
-            container.innerHTML += grid;
+            
+            constructorHTML += `</div>`;
+            document.getElementById('contenido-dinamico').innerHTML = constructorHTML;
         }
 
-        function navegarCategoria(cat) { renderizarCategorias(carta[cat], cat); }
-
-        function añadirProducto(nombre, precio) {
-            if (!mesaActiva) return;
-            mesasAbiertas[mesaActiva].push({ nombre, precio, idUnico: Date.now() + Math.random() });
-            actualizarTicket();
+        function cartaClick(key) {
+            const buscar = (obj) => {
+                if (obj[key]) return obj[key];
+                for (let k in obj) {
+                    if (typeof obj[k] === 'object' && !Array.isArray(obj[k])) {
+                        const r = buscar(obj[k]);
+                        if (r) return r;
+                    }
+                }
+                return null;
+            };
+            return buscar(carta) || [];
         }
 
-        function eliminarProducto(id) {
-            if (!mesaActiva) return;
-            mesasAbiertas[mesaActiva] = mesasAbiertas[mesaActiva].filter(i => i.idUnico !== id);
-            actualizarTicket();
+        function identificarProducto(nombre, precio) {
+            const nLower = nombre.toLowerCase();
+            if(nLower.includes('carnivoro')) verificarPunto('Menú Carnívoro', precio);
+            else if(nLower.includes('calsotada')) document.getElementById('modal-calsotada').style.display = 'flex';
+            else verificarPunto(nombre, precio);
         }
 
-        function actualizarTicket() {
+        function verificarPunto(nombre, precio) {
+            const necesitaPunto = PRODUCTOS_CON_PUNTO.some(c => nombre.toLowerCase().includes(c.toLowerCase())) || nombre.includes('Carnívoro');
+            if(necesitaPunto) {
+                productoPendientePunto = { nombre, precio };
+                document.getElementById('punto-nombre-plato').innerText = nombre.toUpperCase();
+                document.getElementById('modal-puntos').style.display = 'flex';
+            } else enviarCambioServidor(nombre, precio);
+        }
+
+        function seleccionarPunto(punto) { enviarCambioServidor(`${productoPendientePunto.nombre} [${punto}]`, productoPendientePunto.precio); cerrarModalesCarne(); }
+        function omitirPunto() { enviarCambioServidor(productoPendientePunto.nombre, productoPendientePunto.precio); cerrarModalesCarne(); }
+        function cerrarModalesCarne() { document.getElementById('modal-puntos').style.display = 'none'; document.getElementById('modal-calsotada').style.display = 'none'; productoPendientePunto = null; }
+        function finalizarCalsotada(plato) { enviarCambioServidor(`Menú Calçotada (${plato})`, 76.00); cerrarModalesCarne(); }
+
+        async function enviarCambioServidor(nombre, precio) {
+            const itemNuevo = { nombre, precio, idUnico: Date.now() + Math.random(), camarero: camareroActivo };
+            const mesaData = mesasVivas.find(m => m.id === mesaActiva);
+            let pedidoNuevo = mesaData ? [...mesaData.pedido, itemNuevo] : [itemNuevo];
+            
+            actualizarTicketVisual(pedidoNuevo);
+            
+            await fetch('/api/mesas/actualizar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ mesa: mesaActiva, pedido: [itemNuevo], camarero: camareroActivo, operacion: 'añadir' })
+            });
+            
+            if(mesaData) mesaData.pedido = pedidoNuevo;
+            else mesasVivas.push({id: mesaActiva, pedido: pedidoNuevo, ultimaMod: camareroActivo});
+        }
+
+        async function eliminarProducto(idUnico) {
+            bloqueoSincronizacion = true;
+            const mesaData = mesasVivas.find(m => m.id === mesaActiva);
+            if (!mesaData) return;
+            
+            const nuevoPedido = mesaData.pedido.filter(i => i.idUnico !== idUnico);
+            actualizarTicketVisual(nuevoPedido);
+            
+            await fetch('/api/mesas/actualizar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ mesa: mesaActiva, pedido: nuevoPedido, camarero: camareroActivo, operacion: 'borrar' })
+            });
+            
+            mesaData.pedido = nuevoPedido;
+            setTimeout(() => { bloqueoSincronizacion = false; }, 2000);
+        }
+
+        function actualizarTicketVisual(pedido) {
             const lista = document.getElementById('lista-comanda');
-            const totalElt = document.getElementById('total-precio');
-            lista.innerHTML = '';
-            let total = 0;
-            if (mesaActiva && mesasAbiertas[mesaActiva]) {
-                mesasAbiertas[mesaActiva].forEach(i => {
-                    total += i.precio;
-                    lista.innerHTML += `<div class="ticket-item"><span>${i.nombre}</span><div><b>${i.precio.toFixed(2)}€</b><button class="btn-remove" onclick="eliminarProducto(${i.idUnico})">✕</button></div></div>`;
-                });
-            }
-            totalElt.innerText = total.toFixed(2) + "€";
+            lista.innerHTML = ''; let total = 0;
+            pedido.forEach(i => {
+                total += i.precio;
+                lista.innerHTML += `<div class="ticket-item"><span>${i.nombre}</span><div><b>${i.precio.toFixed(2)}€</b><button class="btn-remove" onclick="eliminarProducto(${i.idUnico})">✕</button></div></div>`;
+            });
+            document.getElementById('total-precio').innerText = total.toFixed(2) + "€";
         }
 
-        // COBRO
-        function abrirSelectorPago() {
-            if (!mesaActiva || mesasAbiertas[mesaActiva].length === 0) return alert("Mesa vacía");
-            document.getElementById('paso-metodo').style.display = 'block';
-            document.getElementById('paso-propina').style.display = 'none';
-            document.getElementById('paso-importe').style.display = 'none';
-            document.getElementById('pago-mesa-num').innerText = mesaActiva;
-            document.getElementById('pago-total-num').innerText = document.getElementById('total-precio').innerText;
-            document.getElementById('modal-pago').style.display = 'flex';
-        }
-
-        function chequearPropina() {
-            document.getElementById('paso-metodo').style.display = 'none';
-            document.getElementById('paso-propina').style.display = 'flex';
-        }
-
-        function mostrarInputPropina() {
-            document.getElementById('paso-propina').style.display = 'none';
-            document.getElementById('paso-importe').style.display = 'flex';
-            document.getElementById('input-total-cobrado').focus();
-        }
-
-        function calcularYFinalizar() {
-            const totalActual = parseFloat(document.getElementById('total-precio').innerText);
-            const cobrado = parseFloat(document.getElementById('input-total-cobrado').value);
-            if (isNaN(cobrado) || cobrado < totalActual) return alert("Importe incorrecto");
-
-            const propina = cobrado - totalActual;
-            if (propina > 0) {
-                mesasAbiertas[mesaActiva].push({ nombre: "PROPINA TARJETA", precio: propina, idUnico: Date.now() + Math.random() });
-                actualizarTicket();
-            }
-            finalizarCobro('Tarjeta');
-        }
-
-        async function finalizarCobro(metodo) {
-            const res = await fetch('/api/caja/cierre', {
+        async function imprimirComanda() { 
+            const mesaData = mesasVivas.find(m => m.id === mesaActiva);
+            if(!mesaData) return;
+            await fetch('/api/imprimir/comanda', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    mesa: mesaActiva, camarero: camareroActivo,
-                    total: document.getElementById('total-precio').innerText,
-                    metodo: metodo, productos: mesasAbiertas[mesaActiva]
-                })
+                body: JSON.stringify({ mesa: mesaActiva, pedido: mesaData.pedido, camarero: camareroActivo })
             });
-            if (res.ok) {
-                alert("Mesa cerrada.");
-                delete mesasAbiertas[mesaActiva];
-                cerrarSelectorPago();
-                mostrarMapaMesas();
-            }
+            alert("🖨️ Enviado a impresora"); 
         }
 
-        function cerrarSelectorPago() { document.getElementById('modal-pago').style.display = 'none'; }
-        async function enviarPedido() {
-            if (!mesaActiva || mesasAbiertas[mesaActiva].length === 0) return;
-            const res = await fetch('/api/comanda', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ mesa: mesaActiva, camarero: camareroActivo, pedido: mesasAbiertas[mesaActiva] })
-            });
-            if (res.ok) alert("Comanda enviada.");
+        function abrirSelectorPago() { alert("El cobro se realiza desde el Panel Maestro."); }
+        
+        function filtrarGlobal(v) { 
+            if(!v) {
+                if(historialNav.length > 0) {
+                    const anterior = historialNav[historialNav.length - 1];
+                    renderizarPagina(anterior.obj, anterior.titulo);
+                } else {
+                    mostrarMapaMesas();
+                }
+                return;
+            }
+            let todos = [];
+            const aplanar = (obj) => {
+                for(let k in obj) {
+                    if(Array.isArray(obj[k])) todos = todos.concat(obj[k]);
+                    else if(typeof obj[k] === 'object') aplanar(obj[k]);
+                }
+            }
+            aplanar(carta);
+            const filtrados = todos.filter(p => p.nombre.toLowerCase().includes(v.toLowerCase()));
+            renderizarPagina(filtrados, "RESULTADOS");
         }
     </script>
 </body>

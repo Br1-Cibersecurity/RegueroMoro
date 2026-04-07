@@ -1,6 +1,17 @@
 // src/productos.js
 
 const CARTA_REAL = {
+    "RACIÓN DE PAN": [
+        { nombre: "Ración de Pan", precio: 1.50, prioridad: 1 }
+    ],
+    "Menus": [
+        { nombre: "Menú Diario", precio: 20.00, prioridad: 1 },
+        { nombre: "Infantil", precio: 15.00, prioridad: 1 },
+        { nombre: "Carnivoro", precio: 78.00, prioridad: 2 },
+        { nombre: "Paletilla", precio: 78.00, prioridad: 2 },
+        { nombre: "Mar", precio: 78.00, prioridad: 2 },
+        { nombre: "Calsotada", precio: 76.00, prioridad: 2 }
+    ],
     "Entrantes F.": [
         { nombre: "Ensa. Templ", precio: 15.00, prioridad: 3 },
         { nombre: "Ensa. Regue", precio: 13.50, prioridad: 3 },
@@ -37,13 +48,6 @@ const CARTA_REAL = {
         { nombre: "Lomo bajo", precio: 42.00, prioridad: 3 },
         { nombre: "Paletilla", precio: 38.00, prioridad: 3 },
         { nombre: "Picaña", precio: 27.50, prioridad: 3 }
-    ],
-    "Menus": [
-        { nombre: "Infantil", precio: 15.00, prioridad: 1 },
-        { nombre: "Carnivoro", precio: 78.00, prioridad: 2 },
-        { nombre: "Paletilla", precio: 78.00, prioridad: 2 },
-        { nombre: "Mar", precio: 78.00, prioridad: 2 },
-        { nombre: "Calsotada", precio: 76.00, prioridad: 2 }
     ],
     "Postres": [
         { nombre: "Mous. Mascar", precio: 6.00, prioridad: 4 },

@@ -1,1 +1,12 @@
+# Dependencias
 node_modules/
+
+# Bases de datos y archivos vivos (¡Ignorar siempre!)
+caja.json
+mesas_activas.json
+estado_turno.json
+historial/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

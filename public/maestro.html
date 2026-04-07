@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Maestro - EL REGUERO MORO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af37; --dark: #0f1215; --card: #1c2229; --danger: #c62828; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--dark); color: white; margin: 0; padding: 20px; }
+        
+        /* OVERLAY MENU */
+        #overlay-turno { position: fixed; inset: 0; background: var(--dark); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .reloj-box h1 { font-family: 'Cinzel'; color: var(--gold); font-size: 3rem; margin: 0; }
+        .btn-menu { width: 320px; padding: 18px; margin: 8px; border-radius: 12px; border: 2px solid var(--gold); font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn-iniciar { background: var(--gold); color: black; }
+        .btn-abrir { background: #222; color: var(--gold); }
+        .btn-historial { background: #333; color: white; border-color: #555; }
+        .btn-disabled { opacity: 0.2; cursor: not-allowed; filter: grayscale(1); }
+
+        /* PANEL PRINCIPAL */
+        #panel-maestro { display: none; }
+        .grid-maestra { display: grid; grid-template-columns: 300px 1fr 400px; gap: 20px; height: 85vh; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; overflow-y: auto; }
+        
+        /* ESTILOS AUDITORÍA */
+        .mesa-item { padding: 12px; border-radius: 8px; background: #222; margin-bottom: 8px; cursor: pointer; border: 1px solid #444; }
+        .mesa-item.ocupada { border-color: var(--gold); color: var(--gold); }
+        .timeline-box { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 20px; }
+        .badge-time { font-size: 0.7em; background: #000; padding: 2px 6px; border-radius: 4px; }
+        .producto-linea { display: flex; justify-content: space-between; font-size: 0.9em; padding: 4px 0; border-bottom: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+    <div id="overlay-turno">
+        <div class="reloj-box">
+            <h1 id="live-reloj">00:00:00</h1>
+            <p id="live-fecha">Cargando...</p>
+            <p>ESTADO: <span id="txt-estado">...</span></p>
+        </div>
+        <button id="btn-iniciar" class="btn-menu btn-iniciar" onclick="cambiarTurno(true)">Iniciar Turno</button>
+        <button id="btn-entrar" class="btn-menu btn-abrir" onclick="entrarPanel('vivo')">Gestionar Turno Vivo</button>
+        <button id="btn-hist" class="btn-menu btn-historial" onclick="entrarPanel('historial')">Consultar Historial (7 días)</button>
+        <button id="btn-cerrar" class="btn-menu" style="color:var(--danger); border-color:var(--danger); background:none;" onclick="confirmarCierre()">Cerrar Turno</button>
+    </div>
+
+    <div id="panel-maestro">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h1 id="panel-titulo" style="color:var(--gold); font-family:'Cinzel';">SISTEMA MAESTRO</h1>
+            <button onclick="location.reload()" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:8px 15px; border-radius:5px; cursor:pointer;">SALIR AL MENÚ</button>
+        </div>
+
+        <div class="grid-maestra">
+            <div class="card" id="col-selector">
+                <h3 id="titulo-selector">Mesas Activas</h3>
+                <div id="lista-items"></div>
+            </div>
+
+            <div class="card">
+                <h3>Auditoría Detallada</h3>
+                <div id="visor-detalle">
+                    <p style="opacity:0.5; text-align:center; margin-top:100px;">Selecciona una mesa o turno para inspeccionar.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Resumen de Caja</h3>
+                <div id="visor-stats"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let serverData = { turno: { activo: false }, mesasVivas: [], historial: [] };
+        let modoActual = 'vivo'; // 'vivo' o 'historial'
+
+        function actualizarReloj() {
+            const ahora = new Date();
+            document.getElementById('live-reloj').innerText = ahora.toLocaleTimeString('es-ES');
+            document.getElementById('live-fecha').innerText = ahora.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
+        setInterval(actualizarReloj, 1000);
+
+        async function fetchData() {
+            const res = await fetch('/api/maestro/status');
+            serverData = await res.json();
+            updateMenuUI();
+            if(modoActual === 'vivo' && document.getElementById('panel-maestro').style.display === 'block') renderPanelVivo();
+        }
+
+        function updateMenuUI() {
+            const t = serverData.turno;
+            document.getElementById('txt-estado').innerText = t.activo ? "ACTIVO 🟢" : "CERRADO 🔴";
+            document.getElementById('btn-iniciar').disabled = t.activo;
+            document.getElementById('btn-iniciar').classList.toggle('btn-disabled', t.activo);
+            document.getElementById('btn-entrar').disabled = !t.activo;
+            document.getElementById('btn-entrar').classList.toggle('btn-disabled', !t.activo);
+        }
+
+        async function entrarPanel(modo) {
+            modoActual = modo;
+            document.getElementById('overlay-turno').style.display = 'none';
+            document.getElementById('panel-maestro').style.display = 'block';
+            
+            if(modo === 'historial') {
+                document.getElementById('panel-titulo').innerText = "AUDITORÍA HISTÓRICA";
+                document.getElementById('titulo-selector').innerText = "Turnos Pasados";
+                cargarListaTurnos();
+            } else {
+                renderPanelVivo();
+            }
+        }
+
+        // --- LÓGICA VIVO ---
+        function renderPanelVivo() {
+            const lista = document.getElementById('lista-items');
+            lista.innerHTML = "";
+            ["1","2","3","4","5","6","7","8"].forEach(id => {
+                const viva = serverData.mesasVivas.find(m => m.id === id);
+                lista.innerHTML += `<div class="mesa-item ${viva?'ocupada':''}" onclick="inspeccionarMesaViva('${id}')">Mesa ${id} ${viva?'(Ocupada)':''}</div>`;
+            });
+            actualizarResumenCaja(serverData.historial);
+        }
+
+        function inspeccionarMesaViva(id) {
+            const visor = document.getElementById('visor-detalle');
+            const mesa = serverData.mesasVivas.find(m => m.id === id);
+            const cerradas = serverData.historial.filter(h => h.mesa === id);
+
+            let html = `<h2>Auditoría Mesa ${id} (Turno Actual)</h2>`;
+            if(mesa) {
+                html += `<div class="timeline-box"><b>EN CURSO - Abierta por: ${mesa.iniciadoPor}</b><br>`;
+                mesa.pedido.forEach(p => {
+                    html += `<div class="producto-linea"><span>${p.nombre} <small>(${p.camarero})</small></span> <span>${p.precio}€</span></div>`;
+                });
+                html += `</div>`;
+            }
+            cerradas.reverse().forEach(h => {
+                html += `<div class="timeline-box" style="opacity:0.6"><b>COBRADA - Total: ${h.total}€</b><br>Cobró: ${h.cobradoPor} | Método: ${h.metodo} | Propina: ${h.propina}€</div>`;
+            });
+            visor.innerHTML = html;
+        }
+
+        // --- LÓGICA HISTORIAL ---
+        async function cargarListaTurnos() {
+            const res = await fetch('/api/maestro/historial-archivos');
+            const archivos = await res.json();
+            const lista = document.getElementById('lista-items');
+            lista.innerHTML = archivos.map(a => `<div class="mesa-item" onclick="cargarDetalleTurno('${a.id}')">📂 ${a.id.replace('turno_','').replace('.json','')}</div>`).join('');
+        }
+
+        async function cargarDetalleTurno(archivo) {
+            const res = await fetch(`/api/maestro/historial-detalle/${archivo}`);
+            const data = await res.json();
+            
+            const visor = document.getElementById('visor-detalle');
+            let html = `<h2>Turno: ${archivo}</h2>`;
+            html += `<p>Inicio: ${new Date(data.inicio).toLocaleString()} | Fin: ${new Date(data.fin).toLocaleString()}</p><hr>`;
+            
+            data.resumenCaja.forEach(m => {
+                html += `<div class="timeline-box">
+                    <b>MESA ${m.mesa} - Total: ${m.total}€</b><br>
+                    <small>Cobró: ${m.cobradoPor} | Propina: ${m.propina}€</small><br>`;
+                m.pedido.forEach(p => {
+                    html += `<div class="producto-linea"><span>${p.nombre} <small>(${p.camarero})</small></span> <span>${p.precio}€</span></div>`;
+                });
+                html += `</div>`;
+            });
+            visor.innerHTML = html;
+            actualizarResumenCaja(data.resumenCaja);
+        }
+
+        function actualizarResumenCaja(caja) {
+            const stats = document.getElementById('visor-stats');
+            const total = caja.reduce((acc, curr) => acc + parseFloat(curr.total), 0);
+            const propinas = caja.reduce((acc, curr) => acc + (parseFloat(curr.propina) || 0), 0);
+            stats.innerHTML = `
+                <div style="font-size:1.5rem; color:var(--gold); font-weight:800;">TOTAL: ${total.toFixed(2)}€</div>
+                <div style="font-size:1.1rem; margin-top:10px;">Propinas: ${propinas.toFixed(2)}€</div>
+                <div style="margin-top:10px;">Mesas atendidas: ${caja.length}</div>
+            `;
+        }
+
+        async function cambiarTurno(activo) {
+            await fetch('/api/turno/estado', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ activo }) });
+            fetchData();
+        }
+        function confirmarCierre() { if(confirm("¿Cerrar turno? Los datos se guardarán en el historial.")) cambiarTurno(false); }
+
+        setInterval(fetchData, 3000);
+        actualizarReloj();
+        fetchData();
+    </script>
+</body>
+</html>
