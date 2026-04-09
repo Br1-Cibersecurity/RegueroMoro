@@ -10,42 +10,63 @@ const PATH_CAJA = path.join(__dirname, 'caja.json');
 const PATH_MESAS_VIVAS = path.join(__dirname, 'mesas_activas.json');
 const PATH_TURNO = path.join(__dirname, 'estado_turno.json');
 const DIR_HISTORIAL = path.join(__dirname, 'historial');
+const PATH_MENUS_HISTORIAL = path.join(__dirname, 'historial_menus_diarios.json');
 
+// Blindaje inicial: Crea los archivos si no existen sin pisarlos
 if (!fs.existsSync(DIR_HISTORIAL)) fs.mkdirSync(DIR_HISTORIAL);
+[PATH_CAJA, PATH_MESAS_VIVAS, PATH_TURNO, PATH_MENUS_HISTORIAL].forEach(ruta => {
+    if (!fs.existsSync(ruta)) fs.writeFileSync(ruta, JSON.stringify(ruta === PATH_TURNO ? { activo: false } : [], null, 2));
+});
+
+let registroComandasTurno = []; 
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const obtenerEstadoTurno = () => {
-    try {
-        if (!fs.existsSync(PATH_TURNO)) return { activo: false, inicio: null };
-        return JSON.parse(fs.readFileSync(PATH_TURNO, 'utf8'));
-    } catch (e) { return { activo: false, inicio: null }; }
+const leerDB = (ruta) => { try { return JSON.parse(fs.readFileSync(ruta, 'utf8')); } catch (e) { return ruta === PATH_TURNO ? { activo: false } : []; } };
+const escribirDB = (ruta, datos) => { fs.writeFileSync(ruta, JSON.stringify(datos, null, 2)); };
+
+// --- LÓGICA MENÚ DIARIO ---
+app.get('/api/maestro/menus-diarios', (req, res) => res.json(leerDB(PATH_MENUS_HISTORIAL)));
+app.post('/api/maestro/menus-diarios', (req, res) => {
+    let historial = leerDB(PATH_MENUS_HISTORIAL);
+    if(!Array.isArray(historial)) historial = [];
+    historial.unshift(req.body);
+    escribirDB(PATH_MENUS_HISTORIAL, historial);
+    res.json({ success: true });
+});
+
+// Desglose de menús fijos
+const DESGLOSE_ESTATICO = {
+    "Menu carnivoro": ["Tabla Embutidos", "Ensalada Reguero", "Lomo Bajo Vacuno", "Bebida"],
+    "Menu Paletilla": ["Ensalada Reguero", "Gambones Ajillo", "Paletilla Cordero", "Bebida"],
+    "Menu del Mar": ["Carpaccio Bacalao", "Pulpo Brasa", "Pescado Horno", "Bebida"],
+    "Menu Infantil": ["PLATO ÚNICO: Macarrones + Nuggets + Patatas"]
 };
 
-const leerDB = (ruta) => {
-    try {
-        if (!fs.existsSync(ruta)) return [];
-        return JSON.parse(fs.readFileSync(ruta, 'utf8'));
-    } catch (e) { return []; }
-};
+// --- APIS MAESTRO ---
+app.get('/api/maestro/status', (req, res) => {
+    res.json({ 
+        turno: leerDB(PATH_TURNO), 
+        mesasVivas: leerDB(PATH_MESAS_VIVAS), 
+        historial: leerDB(PATH_CAJA),
+        comandas: registroComandasTurno 
+    });
+});
 
-const escribirDB = (ruta, datos) => {
-    fs.writeFileSync(ruta, JSON.stringify(datos, null, 2));
-};
-
-const purgarHistorialAntiguo = () => {
-    try {
-        const archivos = fs.readdirSync(DIR_HISTORIAL);
-        const ahora = Date.now();
-        const sieteDiasMs = 7 * 24 * 60 * 60 * 1000;
-        archivos.forEach(archivo => {
-            const rutaArchivo = path.join(DIR_HISTORIAL, archivo);
-            const stats = fs.statSync(rutaArchivo);
-            if (ahora - stats.mtimeMs > sieteDiasMs) fs.unlinkSync(rutaArchivo);
-        });
-    } catch (e) { console.error("Error purgando historial"); }
-};
+app.post('/api/turno/estado', (req, res) => {
+    const { activo } = req.body;
+    const estadoActual = leerDB(PATH_TURNO);
+    if (estadoActual.activo && !activo) {
+        const datosTurno = { resumenCaja: leerDB(PATH_CAJA), mesasVivasAlCierre: leerDB(PATH_MESAS_VIVAS), fin: new Date().toISOString() };
+        escribirDB(path.join(DIR_HISTORIAL, `turno_${new Date().toISOString().replace(/:/g, '-')}.json`), datosTurno);
+        escribirDB(PATH_CAJA, []); 
+        escribirDB(PATH_MESAS_VIVAS, []);
+        registroComandasTurno = []; 
+    }
+    escribirDB(PATH_TURNO, { activo, inicio: activo ? new Date().toISOString() : null });
+    res.json({ success: true });
+});
 
 app.get('/api/maestro/historial-archivos', (req, res) => {
     try {
@@ -56,83 +77,73 @@ app.get('/api/maestro/historial-archivos', (req, res) => {
 
 app.get('/api/maestro/historial-detalle/:archivo', (req, res) => {
     try { res.json(JSON.parse(fs.readFileSync(path.join(DIR_HISTORIAL, req.params.archivo), 'utf8'))); } 
-    catch (e) { res.status(404).send("Archivo no encontrado"); }
+    catch (e) { res.status(404).send("Error al leer archivo"); }
 });
 
-app.get('/api/turno/estado', (req, res) => res.json(obtenerEstadoTurno()));
+// --- APIS CAMARERO ---
+app.post('/api/imprimir/comanda', (req, res) => {
+    const { mesa, pax, pedidoNuevos, camarero } = req.body;
+    const ahora = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    
+    const pedidoFiltrado = pedidoNuevos.filter(p => {
+        const n = p.nombre.toLowerCase();
+        return !n.includes("postre") && !n.includes("cafe") && !n.includes("infusion") && !n.includes("helado") && !n.includes("tarta");
+    });
 
-app.post('/api/turno/estado', (req, res) => {
-    const { activo } = req.body;
-    const estadoActual = obtenerEstadoTurno();
-    if (estadoActual.activo && !activo) {
-        const datosTurno = { resumenCaja: leerDB(PATH_CAJA), mesasVivasAlCierre: leerDB(PATH_MESAS_VIVAS), inicio: estadoActual.inicio, fin: new Date().toISOString() };
-        const nombreArchivo = `turno_${new Date().toISOString().replace(/:/g, '-')}.json`;
-        escribirDB(path.join(DIR_HISTORIAL, nombreArchivo), datosTurno);
-        escribirDB(PATH_CAJA, []);
-        escribirDB(PATH_MESAS_VIVAS, []);
-        purgarHistorialAntiguo();
-    }
-    const nuevoEstado = { activo, inicio: activo ? (estadoActual.inicio || new Date().toISOString()) : null };
-    escribirDB(PATH_TURNO, nuevoEstado);
-    res.json({ success: true, ...nuevoEstado });
+    if (pedidoFiltrado.length === 0) return res.json({ success: true, msg: "Solo postres" });
+
+    let lineasFinales = [];
+    const menuDiarioActual = leerDB(PATH_MENUS_HISTORIAL)[0] || null;
+
+    pedidoFiltrado.forEach(p => {
+        const camareroProducto = p.camarero || camarero;
+        lineasFinales.push(`1x ${p.nombre.toUpperCase()} (${camareroProducto})`);
+        
+        const nNorm = p.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        if (nNorm.includes("diario") && menuDiarioActual) {
+            lineasFinales.push(`   > 1º: ${menuDiarioActual.primero}`);
+            lineasFinales.push(`   > 2º: ${menuDiarioActual.segundo}`);
+        } else {
+            const key = Object.keys(DESGLOSE_ESTATICO).find(k => nNorm.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()));
+            if (key) DESGLOSE_ESTATICO[key].forEach(sub => lineasFinales.push(`   > ${sub}`));
+        }
+    });
+
+    registroComandasTurno.unshift({ mesa, pax, camarero, ahora, productos: lineasFinales });
+    res.json({ success: true });
 });
-
-app.get('/api/carta', (req, res) => res.json(CARTA_REAL));
-app.get('/api/mesas/activas', (req, res) => res.json(leerDB(PATH_MESAS_VIVAS)));
 
 app.post('/api/mesas/actualizar', (req, res) => {
-    const estado = obtenerEstadoTurno();
-    if (!estado.activo) return res.status(403).json({ error: "TURNO CERRADO" });
-    const { mesa, pedido, camarero, operacion, pax } = req.body;
+    const { mesa, pedido, camarero, pax, operacion } = req.body;
     let mesasVivas = leerDB(PATH_MESAS_VIVAS);
     let idx = mesasVivas.findIndex(m => m.id === mesa);
 
     if (idx === -1) {
         mesasVivas.push({ id: mesa, pax: pax || 1, pedido: pedido || [], iniciadoPor: camarero, ultimaMod: camarero, timestamp: new Date().toISOString(), estadoInterno: 'abierta' });
     } else {
-        if (operacion === 'borrar' || operacion === 'sobrescribir') {
-            mesasVivas[idx].pedido = pedido;
-        } else {
-            const idsExistentes = new Set(mesasVivas[idx].pedido.map(p => p.idUnico));
-            const nuevosItems = pedido.filter(p => !idsExistentes.has(p.idUnico));
-            mesasVivas[idx].pedido = [...mesasVivas[idx].pedido, ...nuevosItems];
-        }
+        if (operacion === 'borrar' || operacion === 'sobrescribir') mesasVivas[idx].pedido = pedido;
+        else mesasVivas[idx].pedido = [...mesasVivas[idx].pedido, ...pedido];
         mesasVivas[idx].ultimaMod = camarero;
-        mesasVivas[idx].estadoInterno = 'abierta';
     }
     escribirDB(PATH_MESAS_VIVAS, mesasVivas);
-    res.json({ success: true, pedidoActualizado: mesasVivas.find(m => m.id === mesa).pedido });
+    res.json({ success: true });
 });
 
 app.post('/api/caja/cierre', (req, res) => {
     const { mesa, total, metodo, propina, camarero, pedido } = req.body;
-    let caja = leerDB(PATH_CAJA);
-    let mesasVivas = leerDB(PATH_MESAS_VIVAS);
-    const mesaInfo = mesasVivas.find(m => m.id === mesa);
-
-    caja.push({ mesa, total, metodo, propina, cobradoPor: camarero, iniciadoPor: mesaInfo ? mesaInfo.iniciadoPor : camarero, pedido, timestamp: new Date().toISOString() });
+    let caja = leerDB(PATH_CAJA), mesasVivas = leerDB(PATH_MESAS_VIVAS);
+    caja.push({ mesa, total, metodo, propina, cobradoPor: camarero, pedido, timestamp: new Date().toISOString() });
     escribirDB(PATH_CAJA, caja);
-
-    // CAMBIO: No borramos, marcamos como cobrada para el semáforo global
     let idx = mesasVivas.findIndex(m => m.id === mesa);
-    if (idx !== -1) {
-        mesasVivas[idx].estadoInterno = 'cobrada';
-        mesasVivas[idx].ultimaMod = 'COBRADA';
-        mesasVivas[idx].pedido = pedido; // Aseguramos que la propina se guarda
-    }
+    if (idx !== -1) { mesasVivas[idx].estadoInterno = 'cobrada'; mesasVivas[idx].ultimaMod = 'COBRADA'; mesasVivas[idx].pedido = pedido; }
     escribirDB(PATH_MESAS_VIVAS, mesasVivas);
     res.json({ success: true });
 });
 
-// NUEVA RUTA PARA DOBLAR
 app.post('/api/mesas/doblar', (req, res) => {
-    const { mesa } = req.body;
-    let mesasVivas = leerDB(PATH_MESAS_VIVAS);
-    mesasVivas = mesasVivas.filter(m => m.id !== mesa);
-    escribirDB(PATH_MESAS_VIVAS, mesasVivas);
+    escribirDB(PATH_MESAS_VIVAS, leerDB(PATH_MESAS_VIVAS).filter(m => m.id !== req.body.mesa));
     res.json({ success: true });
 });
 
-app.get('/api/maestro/status', (req, res) => res.json({ turno: obtenerEstadoTurno(), mesasVivas: leerDB(PATH_MESAS_VIVAS), historial: leerDB(PATH_CAJA) }));
-
-app.listen(PORT, () => console.log(`🚀 Servidor Reguero Moro Pro en http://localhost:${PORT}`));
+app.get('/api/carta', (req, res) => res.json(CARTA_REAL));
+app.listen(PORT, () => console.log(`🚀 Servidor Reguero Moro Pro en puerto ${PORT}`));
