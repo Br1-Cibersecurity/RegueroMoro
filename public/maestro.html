@@ -5,122 +5,178 @@
     <title>Panel Maestro - EL REGUERO MORO</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --gold-dark: #8e6d1d; --gold-primary: #b38f2d; --gold-accent: #d4af37; --bg-light: #f4f7f6; --white: #ffffff; --border-pro: #c5ced6; --text-dark: #1a252f; --text-muted: #5d6d7e; --danger: #c0392b; --success: #27ae60; --info: #2980b9; }
+        :root { --gold-dark: #8e6d1d; --gold-primary: #b38f2d; --gold-accent: #d4af37; --bg-light: #f4f7f6; --white: #ffffff; --border-pro: #c5ced6; --text-dark: #1a252f; --danger: #c0392b; --success: #27ae60; --info: #2980b9; }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-light); color: var(--text-dark); margin: 0; padding: 20px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; box-sizing:border-box; }
-        .marca-agua-central { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: url('logo.png') center/contain no-repeat; opacity: 0.10; pointer-events: none; z-index: 0; }
+        .marca-agua-central { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: url('logo.png') center/contain no-repeat; opacity: 0.08; pointer-events: none; z-index: 0; }
+        
         .header-top { display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 15px 25px; border-radius: 10px; border: 1px solid var(--border-pro); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; margin-bottom: 20px; }
-        .header-top h1 { font-family: 'Cinzel'; color: var(--gold-dark); margin: 0; font-size: 1.8rem; }
+        .header-top h1 { font-family: 'Cinzel'; color: var(--gold-dark); margin: 0; font-size: 1.6rem; }
         .header-reloj { text-align: right; }
-        .header-reloj p { margin: 0; font-weight: 800; color: var(--gold-primary); font-size: 1.2rem; }
-        .header-reloj span { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+        .header-reloj p { margin: 0; font-weight: 800; color: var(--gold-primary); font-size: 1.1rem; }
+
         .nav-maestro { display: flex; gap: 10px; flex-shrink:0; z-index: 10; margin-bottom: 20px; }
-        .nav-btn { padding: 12px 25px; border-radius: 6px; border: none; cursor: pointer; font-weight: 800; color: #7f8c8d; background: var(--white); text-transform:uppercase; font-size:0.9rem; border: 1px solid var(--border-pro); transition: 0.2s; }
+        .nav-btn { padding: 12px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 800; color: #7f8c8d; background: var(--white); text-transform:uppercase; font-size:0.85rem; border: 1px solid var(--border-pro); transition: 0.2s; }
         .nav-btn.active { background: var(--gold-primary); color: white; border-color: var(--gold-dark); box-shadow: 0 3px 0 var(--gold-dark); }
-        .nav-btn:hover:not(.active) { background: #eee; }
+
         .grid-maestra { display: grid; grid-template-columns: 350px 1fr 350px; gap: 20px; flex-grow: 1; overflow:hidden; z-index: 5; }
-        .card { background: white; padding: 20px; border-radius: 10px; border: 1px solid #ddd; overflow-y: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        .ticket-cocina-visual { background: #fff; border: 1px solid #000; font-family: 'Courier New', monospace; padding: 20px; width: 300px; box-shadow: 5px 5px 0 #ddd; margin-bottom: 20px; color:black; }
+        .card { background: white; padding: 20px; border-radius: 10px; border: 1px solid #ddd; overflow-y: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
+        
         .mesa-item { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; font-weight: 700; display: flex; justify-content: space-between; align-items:center; transition: 0.2s; border-radius:4px; margin-bottom:5px; background: #fafafa; }
+        .mesa-item:hover { background:#f0f0f0; transform: translateX(5px); }
         .mesa-item.ocupada { border-left: 5px solid var(--danger); background: #fffdf5; }
         .mesa-item.cobrada { border-left: 5px solid var(--success); background: #f6fff6; }
-        .btn-accion { padding: 15px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 800; color: white; text-transform: uppercase; font-size: 0.9rem; width: 100%; transition: 0.2s; margin-bottom: 10px; }
+
+        .btn-accion { padding: 15px; border-radius: 6px; border: none; cursor: pointer; font-weight: 800; color: white; text-transform: uppercase; font-size: 0.8rem; width: 100%; transition: 0.2s; margin-bottom: 10px; }
         .btn-abrir { background: var(--success); box-shadow: 0 4px 0 #1e8449; }
         .btn-cerrar { background: var(--danger); box-shadow: 0 4px 0 #922b21; }
         .btn-accion:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; box-shadow: none; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width:450px; }
-        input, textarea { padding:15px; border:1px solid #ccc; border-radius:8px; width:100%; box-sizing:border-box; margin-bottom:10px; font-family:'Montserrat'; }
-        .ticket-realista { background: #fff; border: 1px solid #ccc; padding: 20px; font-family: 'Courier New', Courier, monospace; color: #000; box-shadow: 3px 3px 10px rgba(0,0,0,0.1); }
-        .ticket-realista .linea-punteada { border-bottom: 1px dashed #000; margin: 10px 0; }
-        .ticket-realista .item-fila { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.95rem; }
+
+        /* Ticket Realista */
+        .ticket-realista { background: #fff; border: 1px solid #ccc; padding: 20px; font-family: 'Courier New', Courier, monospace; color: #000; box-shadow: 3px 3px 10px rgba(0,0,0,0.1); position: relative; }
+        .ticket-realista .linea-punteada { border-bottom: 1px dashed #000; margin: 12px 0; }
+        .ticket-realista .bloque-camarero { margin-top: 15px; border-left: 3px solid var(--gold-accent); padding-left: 10px; }
+        .ticket-realista .item-fila { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.9rem; }
+
+        /* Historial Ventas */
+        .historial-item { background: #fafafa; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; }
+        .historial-item-header { padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; }
+        .historial-item-body { display: none; padding: 0 12px 12px; border-top: 1px solid #eee; font-size: 0.85rem; }
+
+        /* Formato Menú (image_264fc1.jpg) */
+        .menu-card-historial { background: #fff; border: 1px solid var(--gold-accent); border-radius: 8px; margin-bottom: 20px; padding: 0; overflow: hidden; }
+        .menu-card-header { background: #fdfaf2; padding: 10px 15px; border-bottom: 1px solid var(--gold-accent); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .menu-card-body { padding: 15px; display: none; }
+        .menu-seccion-titulo { font-family: 'Cinzel'; color: var(--gold-dark); text-align: center; border-bottom: 1px solid #eee; margin: 10px 0; padding-bottom: 5px; font-size: 0.9rem; letter-spacing: 2px; }
+        .menu-item-text { text-align: center; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: #444; }
+
+        /* CRUD Carta */
+        .prod-fila { display:flex; gap:10px; align-items:center; margin-bottom:10px; padding:8px; background:#fcfcfc; border-radius:8px; border:1px solid #eee; }
+        input, textarea { padding:10px; border:1px solid #ccc; border-radius:6px; width:100%; box-sizing:border-box; font-family:'Montserrat'; font-weight: 600; margin-bottom: 8px; }
+
+        /* Modales */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; text-align: center; width: 400px; box-shadow: 0 0 40px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
     <div class="marca-agua-central"></div>
+
     <div class="header-top">
-        <h1>REGUERO MORO - MAESTRO</h1>
-        <div class="header-reloj"><p id="live-reloj">00:00:00</p><span id="live-fecha">...</span></div>
+        <h1>SISTEMA MAESTRO - REGUERO MORO</h1>
+        <div class="header-reloj">
+            <p id="live-reloj">00:00:00</p>
+            <span id="live-fecha" style="font-size:0.8rem; color:var(--text-muted);">...</span>
+        </div>
     </div>
 
     <div class="nav-maestro">
-        <button id="nav-auditoria" class="nav-btn active" onclick="seccion('auditoria', this)">📊 Dashboard Auditoría</button>
-        <button id="nav-cocina" class="nav-btn" onclick="seccion('cocina', this)">🔥 Monitor Comandas</button>
+        <button id="nav-auditoria" class="nav-btn active" onclick="seccion('auditoria', this)">📊 Auditoría Salas</button>
+        <button id="nav-cocina" class="nav-btn" onclick="seccion('cocina', this)">🔥 Monitor Cocina</button>
         <button id="nav-historial" class="nav-btn" onclick="seccion('historial', this)">📁 Historial Ventas</button>
-        <button id="nav-carta" class="nav-btn" onclick="seccion('carta', this)">📝 Gestionar Carta y Productos</button>
-        <button id="nav-config" class="nav-btn" onclick="seccion('config', this)">📅 Configurar Menú Semanal</button>
+        <button id="nav-carta" class="nav-btn" onclick="seccion('carta', this)">📝 Gestionar Carta y Menús</button>
     </div>
 
     <div id="sec-auditoria" class="grid-maestra">
-        <div class="card" style="display:flex; flex-direction:column;">
-            <h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">CONTROL DE TURNO</h3>
-            <button id="btn-abrir-turno" class="btn-accion btn-abrir" onclick="cambiarTurno(true)">▶ INICIAR TURNO</button>
-            <button id="btn-cerrar-turno" class="btn-accion btn-cerrar" onclick="abrirConfirmarCierre()">⏹ FINALIZAR JORNADA</button>
-            <h3 style="margin-top:20px; border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">MESAS ACTIVAS</h3>
-            <div id="lista-mesas" style="flex-grow:1; overflow-y:auto; padding-right:5px;"></div>
-        </div>
         <div class="card">
-            <h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">TICKET CONSUMO</h3>
-            <div id="visor-detalle"><div style="text-align:center; padding:50px; opacity:0.3;"><h1 style="font-size:4rem; margin:0;">📋</h1><p>Selecciona una mesa para ver su ticket</p></div></div>
+            <h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px; font-size:1rem;">OPERACIONES</h3>
+            <button id="btn-abrir-turno" class="btn-accion btn-abrir" onclick="cambiarTurno(true)">▶ ABRIR RESTAURANTE</button>
+            <button id="btn-cerrar-turno" class="btn-accion btn-cerrar" onclick="abrirModalCierre()">⏹ FINALIZAR JORNADA</button>
+            
+            <h3 style="margin-top:25px; border-bottom:2px solid var(--gold-primary); padding-bottom:10px; font-size:1rem;">MESAS ACTIVAS</h3>
+            <div id="lista-mesas" style="flex-grow:1; overflow-y:auto;"></div>
         </div>
+
         <div class="card">
-            <h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">CAJA ACTUAL</h3>
+            <h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px; font-size:1rem;">TICKET DE CONSUMO</h3>
+            <div id="visor-detalle">
+                <div style="text-align:center; padding:100px 20px; opacity:0.2;">
+                    <h1 style="font-size:4rem; margin:0;">📋</h1>
+                    <p>Selecciona una mesa</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px; font-size:1rem;">CAJA DEL DÍA</h3>
             <div id="visor-caja"></div>
         </div>
     </div>
 
-    <div id="sec-cocina" style="display:none; overflow-y:auto; flex-grow:1; padding:10px;"><div id="monitor-tickets" style="display:flex; flex-wrap:wrap; gap:25px; justify-content:center;"></div></div>
-
-    <div id="sec-historial" class="grid-maestra" style="display:none;">
-        <div class="card"><h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">TURNOS PASADOS</h3><div id="lista-turnos-historial"></div></div>
-        <div class="card"><h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">DETALLE DEL TURNO</h3><div id="visor-detalle-historial"></div></div>
-        <div class="card"><h3 style="margin-top:0; border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">RESUMEN DÍA</h3><div id="visor-caja-historial"></div></div>
+    <div id="sec-cocina" style="display:none; overflow-y:auto; flex-grow:1; padding:10px;">
+        <div id="monitor-tickets" style="display:flex; flex-wrap:wrap; gap:25px; justify-content:center;"></div>
     </div>
 
-    <div id="sec-carta" style="display:none; padding:20px; overflow-y:auto; flex-grow:1;">
-        <div class="card" style="max-width:900px; margin:0 auto;">
-            <h2 style="font-family:'Cinzel'; color:var(--gold-dark); text-align:center;">EDITOR DE CARTA Y PRODUCTOS</h2>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                <div>
-                    <h4>JSON de la Carta</h4>
-                    <textarea id="json-carta" rows="20" style="font-family:monospace; font-size:0.8rem;"></textarea>
-                    <button class="btn-accion" style="background:var(--info);" onclick="guardarCarta()">💾 GUARDAR CAMBIOS EN CARTA</button>
-                    <p style="font-size:0.8rem; color:var(--text-muted);">Puedes modificar precios, añadir categorías o productos. Usa formato JSON estricto.</p>
+    <div id="sec-historial" class="grid-maestra" style="display:none;">
+        <div class="card"><h3 style="margin:0 0 15px; border-bottom:2px solid var(--gold-primary); font-size:1rem;">TURNOS CERRADOS</h3><div id="lista-turnos-historial"></div></div>
+        <div class="card"><h3 style="margin:0 0 15px; border-bottom:2px solid var(--gold-primary); font-size:1rem;">DETALLE CIERRE (Desplegable)</h3><div id="visor-detalle-historial"></div></div>
+        <div class="card"><h3 style="margin:0 0 15px; border-bottom:2px solid var(--gold-primary); font-size:1rem;">BALANCE TOTAL</h3><div id="visor-caja-historial"></div></div>
+    </div>
+
+    <div id="sec-carta" style="display:none; padding:10px; overflow-y:auto; flex-grow:1;">
+        <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:20px; height:100%;">
+            <div class="card">
+                <h2 style="font-family:'Cinzel'; color:var(--gold-dark); margin-top:0; text-align:center; font-size:1.2rem;">EDITOR DE PRODUCTOS</h2>
+                <div style="display:flex; gap:15px; flex-grow:1; overflow:hidden;">
+                    <div style="width:40%; border-right:1px solid #eee; padding-right:15px; overflow-y:auto;">
+                        <ul id="crud-cat-list" style="list-style:none; padding:0; margin:0;"></ul>
+                        <button class="btn-accion" style="background:#333; margin-top:10px; padding:10px;" onclick="abrirModalPrompt('Nombre de la categoría:', añadirCategoria)">+ Nueva Categoría</button>
+                    </div>
+                    <div style="width:60%; padding-left:5px; overflow-y:auto; display:flex; flex-direction:column;">
+                        <div id="crud-prod-list" style="flex-grow:1;"></div>
+                        <button class="btn-accion" style="background:var(--success); margin-top:10px; padding:10px;" id="btn-add-prod" onclick="añadirProducto()" disabled>+ Añadir Plato</button>
+                        <button class="btn-accion" style="background:var(--info); margin-top:10px; padding:12px;" onclick="guardarCartaVisual()">💾 GUARDAR CARTA</button>
+                    </div>
                 </div>
-                <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
-                    <h4>Instrucciones</h4>
-                    <p style="font-size:0.9rem;">El formato debe ser un objeto donde las claves son categorías y los valores arreglos de productos.</p>
-                    <pre style="background:#222; color:#0f0; padding:10px; border-radius:5px; font-size:0.75rem;">
-{
-  "Entrantes": [
-    { "nombre": "Ensalada", "precio": 12.50 },
-    { "nombre": "Pulpo", "precio": 22.00 }
-  ]
-}
-                    </pre>
+            </div>
+            <div class="card">
+                <h2 style="font-family:'Cinzel'; color:var(--gold-dark); text-align:center; margin-top:0; font-size:1.2rem;">MENÚ DIARIO SEMANAL</h2>
+                <div style="background:#fdfaf2; padding:15px; border-radius:8px; border:1px solid var(--gold-accent); margin-bottom:15px;">
+                    <div style="display:flex; gap:10px;"><input type="text" id="m-inicio" placeholder="Lunes..."><input type="text" id="m-fin" placeholder="Viernes..."></div>
+                    <textarea id="m-1" rows="2" placeholder="ENTRANTES..."></textarea>
+                    <textarea id="m-2" rows="2" placeholder="PLATOS..."></textarea>
+                    <textarea id="m-3" rows="2" placeholder="POSTRES..."></textarea>
+                    <button class="btn-accion" style="background:var(--gold-primary); margin:5px 0 0 0;" onclick="guardarMenu()">PUBLICAR MENÚ</button>
                 </div>
+                <div id="historial-menus" style="overflow-y:auto; flex-grow:1;"></div>
             </div>
         </div>
     </div>
 
-    <div id="sec-config" style="display:none; padding:20px; overflow-y:auto; flex-grow:1;">
-        <div class="card" style="max-width:600px; margin:0 auto;">
-            <h2 style="font-family:'Cinzel'; color:var(--gold-dark); text-align:center; margin-top:0;">EDITOR MENÚ DIARIO SEMANAL</h2>
-            <input type="text" id="m-inicio" placeholder="Fecha Lunes (ej: 06 de Abril)">
-            <input type="text" id="m-fin" placeholder="Fecha Viernes (ej: 10 de Abril)">
-            <input type="text" id="m-1" placeholder="Platos de Primero (Separados por coma)">
-            <input type="text" id="m-2" placeholder="Platos de Segundo (Separados por coma)">
-            <input type="text" id="m-3" placeholder="Postres Disponibles (Separados por coma)">
-            <button class="btn-accion" style="background:var(--gold-primary);" onclick="guardarMenu()">PUBLICAR MENÚ</button>
-            <div id="historial-menus" style="margin-top:40px;"></div>
-        </div>
-    </div>
-
-    <div id="modal-confirm" class="modal"><div class="modal-content"><h2 style="font-family:'Cinzel'; color:var(--danger); margin-top:0;">¿FINALIZAR JORNADA?</h2><p>Se guardará el historial en caja y se vaciarán todas las mesas activas.</p><button class="btn-accion btn-cerrar" style="margin-top:20px;" onclick="cambiarTurno(false)">SÍ, CERRAR TURNO</button><button class="btn-accion" style="background:#eee; color:black; box-shadow:none; border:1px solid #ccc;" onclick="document.getElementById('modal-confirm').style.display='none'">CANCELAR</button></div></div>
+    <div id="modal-alerta" class="modal"><div class="modal-content"><h2 id="alerta-msg" style="margin-bottom:30px;"></h2><button class="btn-accion" style="background:var(--gold-primary);" onclick="document.getElementById('modal-alerta').style.display='none'">ACEPTAR</button></div></div>
+    <div id="modal-confirm" class="modal"><div class="modal-content"><h2 id="confirm-titulo" style="font-family:'Cinzel'; color:var(--danger); margin-top:0;">CONFIRMAR</h2><p id="confirm-msg" style="margin-bottom:30px;"></p><button id="btn-ejecutar-confirm" class="btn-accion btn-cerrar">SÍ, BORRAR</button><button class="btn-accion" style="background:#eee; color:black; margin-top:10px;" onclick="document.getElementById('modal-confirm').style.display='none'">CANCELAR</button></div></div>
+    <div id="modal-prompt" class="modal"><div class="modal-content"><h3 id="prompt-titulo" style="margin-top:0;"></h3><input type="text" id="prompt-input"><button class="btn-accion" style="background:var(--success); margin-top:20px;" onclick="ejecutarPrompt()">ACEPTAR</button><button class="btn-accion" style="background:#eee; color:black; margin-top:10px;" onclick="document.getElementById('modal-prompt').style.display='none'">CANCELAR</button></div></div>
 
     <script>
         let serverData = { turno: { activo: false }, mesasVivas: [], historial: [], comandas: [] };
-        function abrirConfirmarCierre() { document.getElementById('modal-confirm').style.display = 'flex'; }
+        let cartaLocal = {};
+        let categoriaActiva = null;
+
+        function mostrarAlerta(msg) { document.getElementById('alerta-msg').innerText = msg; document.getElementById('modal-alerta').style.display = 'flex'; }
         
+        let confirmAction = null;
+        function mostrarConfirm(titulo, msg, btnColor, accion) {
+            document.getElementById('confirm-titulo').innerText = titulo;
+            document.getElementById('confirm-msg').innerText = msg;
+            document.getElementById('btn-ejecutar-confirm').style.background = `var(--${btnColor})`;
+            confirmAction = accion;
+            document.getElementById('modal-confirm').style.display = 'flex';
+        }
+        document.getElementById('btn-ejecutar-confirm').addEventListener('click', () => { if(confirmAction) confirmAction(); document.getElementById('modal-confirm').style.display = 'none'; });
+
+        let promptAction = null;
+        function abrirModalPrompt(titulo, accion) {
+            document.getElementById('prompt-titulo').innerText = titulo;
+            document.getElementById('prompt-input').value = '';
+            promptAction = accion;
+            document.getElementById('modal-prompt').style.display = 'flex';
+            document.getElementById('prompt-input').focus();
+        }
+        function ejecutarPrompt() {
+            const val = document.getElementById('prompt-input').value.trim();
+            if(promptAction) promptAction(val);
+            document.getElementById('modal-prompt').style.display = 'none';
+        }
+
         async function refresh() {
             try {
                 const r = await fetch('/api/maestro/status'); serverData = await r.json();
@@ -133,43 +189,127 @@
         }
 
         function seccion(s, b) { 
-            ['auditoria','cocina','config','historial','carta'].forEach(id => document.getElementById('sec-'+id).style.display = 'none');
-            document.getElementById('sec-'+s).style.display = (s==='auditoria'||s==='historial') ? 'grid' : 'block';
+            ['auditoria','cocina','historial','carta'].forEach(id => document.getElementById('sec-'+id).style.display = 'none');
+            document.getElementById('sec-'+s).style.display = (s==='auditoria'||s==='historial'||s==='carta') ? 'grid' : 'block';
             if(b) { document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); }
-            if(s==='config') cargarMenus();
+            if(s==='carta') { cargarMenus(); iniciarCRUDCarta(); }
             if(s==='historial') cargarListaTurnos();
-            if(s==='carta') cargarCarta();
-        }
-        
-        async function cambiarTurno(activo) { await fetch('/api/turno/estado', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ activo }) }); document.getElementById('modal-confirm').style.display='none'; refresh(); }
-        
-        function renderAuditoria() {
-            if (!serverData.turno.activo) { document.getElementById('lista-mesas').innerHTML = `<div style="padding:20px; text-align:center; color:var(--danger); font-weight:bold; background:#fff5f5; border-radius:8px;">TURNO CERRADO</div>`; } 
-            else { document.getElementById('lista-mesas').innerHTML = (serverData.mesasVivas || []).map(m => `<div class="mesa-item ${m.estadoInterno==='cobrada'?'cobrada':'ocupada'}" onclick="verMesa('${m.id}')"><span>Mesa ${m.id}</span><b style="color:${m.estadoInterno==='cobrada'?'var(--success)':'var(--danger)'}">${m.estadoInterno==='cobrada'?'PAGADA':m.ultimaMod}</b></div>`).join(''); }
-            const total = (serverData.historial || []).reduce((acc,h)=>acc+parseFloat(h.total), 0);
-            const props = (serverData.historial || []).reduce((acc,h)=>acc+(parseFloat(h.propina)||0), 0);
-            document.getElementById('visor-caja').innerHTML = `<div style="text-align:center; padding:30px; background:#fafafa; border-radius:10px; border:2px solid var(--gold-primary);"><small>TOTAL RECAUDADO</small><h1 style="font-size:3.5rem; margin:10px 0; color:var(--gold-dark);">${total.toFixed(2)}€</h1><p style="color:var(--success); font-weight:bold; margin:5px 0;">Propinas: +${props.toFixed(2)}€</p><p style="margin:0; opacity:0.6;">Servicios: ${serverData.historial.length}</p></div>`;
         }
 
+        function abrirModalCierre() { mostrarConfirm('¿FINALIZAR JORNADA?', 'Se guardará la caja y se vaciarán las mesas.', 'danger', () => cambiarTurno(false)); }
+        async function cambiarTurno(activo) { await fetch('/api/turno/estado', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ activo }) }); refresh(); }
+        
+        function renderAuditoria() {
+            const list = document.getElementById('lista-mesas');
+            if (!serverData.turno.activo) { list.innerHTML = `<div style="padding:20px; text-align:center; color:var(--danger); font-weight:bold; background:#fff5f5; border-radius:8px;">RESTAURANTE CERRADO</div>`; } 
+            else { list.innerHTML = (serverData.mesasVivas || []).map(m => `<div class="mesa-item ${m.estadoInterno==='cobrada'?'cobrada':'ocupada'}" onclick="verMesa('${m.id}')"><span>Mesa ${m.id}</span><b>${m.estadoInterno==='cobrada'?'PAGADA':m.ultimaMod}</b></div>`).join(''); }
+            const total = (serverData.historial || []).reduce((acc,h)=>acc+parseFloat(h.total), 0);
+            const props = (serverData.historial || []).reduce((acc,h)=>acc+(parseFloat(h.propina)||0), 0);
+            document.getElementById('visor-caja').innerHTML = `<div style="text-align:center; padding:30px; background:#fafafa; border-radius:10px; border:2px solid var(--gold-primary);"><small>RECAUDADO</small><h1 style="font-size:3rem; margin:10px 0; color:var(--gold-dark);">${total.toFixed(2)}€</h1><p style="color:var(--success); font-weight:bold;">Propinas: +${props.toFixed(2)}€</p></div>`;
+        }
+
+        // TICKET INTELIGENTE: AGRUPACIÓN Y BLOQUES
         function verMesa(id) { 
             const m = serverData.mesasVivas.find(x => x.id === id); if(!m) return;
-            let html = `<div class="ticket-realista"><div style="text-align:center;"><h2 style="margin:0; font-size:1.5rem;">MESA ${id}</h2><div style="font-size:0.85rem; margin-top:5px;">Atiende: ${m.iniciadoPor} | Pax: ${m.pax}</div></div><div class="linea-punteada"></div>`;
-            let total = 0;
-            m.pedido.forEach(p => { total += p.precio; html += `<div class="item-fila"><span>${p.nombre} <small style="color:#888;">(${p.camarero})</small></span><b>${p.precio.toFixed(2)}€</b></div>`; });
-            html += `<div class="linea-punteada"></div><div style="text-align:right; font-size:1.2rem;"><h3 style="margin:0;">TOTAL: ${total.toFixed(2)}€</h3></div><div style="text-align:center; margin-top:20px; font-weight:bold; padding:10px; border:1px solid ${m.estadoInterno==='cobrada'?'var(--success)':'var(--danger)'}; color:${m.estadoInterno==='cobrada'?'var(--success)':'var(--danger)'};">ESTADO: ${m.estadoInterno==='cobrada'?'PAGADA - PENDIENTE LIMPIAR':'EN CURSO'}</div></div>`;
+            let html = `<div class="ticket-realista"><div style="text-align:center;"><h2 style="margin:0; font-size:1.2rem;">EL REGUERO MORO</h2><div style="font-size:0.8rem; margin-top:5px; font-weight:bold;">MESA ${id} | PAX: ${m.pax}</div><div style="font-size:0.75rem; opacity:0.7;">Inició: ${m.iniciadoPor}</div></div><div class="linea-punteada"></div>`;
+            
+            // Agrupación por bloques de camarero
+            let bloques = [];
+            let currentBlock = null;
+
+            m.pedido.forEach(p => {
+                if (!currentBlock || currentBlock.camarero !== p.camarero) {
+                    currentBlock = { camarero: p.camarero, items: {} };
+                    bloques.push(currentBlock);
+                }
+                currentBlock.items[p.nombre] = (currentBlock.items[p.nombre] || 0) + 1;
+            });
+
+            bloques.forEach(b => {
+                html += `<div class="bloque-camarero"><small style="color:var(--gold-dark); font-weight:900;">ATENDIÓ: ${b.camarero}</small>`;
+                for (let nombre in b.items) {
+                    const cant = b.items[nombre];
+                    const pOriginal = m.pedido.find(x => x.nombre === nombre);
+                    html += `<div class="item-fila"><span>${cant > 1 ? `<b>${cant}x</b> ` : ''}${nombre}</span><b>${(pOriginal.precio * cant).toFixed(2)}€</b></div>`;
+                }
+                html += `</div>`;
+            });
+
+            const total = m.pedido.reduce((a,b)=>a+b.precio, 0);
+            html += `<div class="linea-punteada"></div><div style="text-align:right; font-size:1.3rem;"><b>TOTAL: ${total.toFixed(2)}€</b></div><div style="text-align:center; margin-top:20px; font-weight:bold; padding:8px; border:2px solid ${m.estadoInterno==='cobrada'?'var(--success)':'var(--danger)'}; color:${m.estadoInterno==='cobrada'?'var(--success)':'var(--danger)'}; font-size:0.8rem;">${m.estadoInterno==='cobrada'?'PAGADA - LIBERAR MESA':'ESTADO: EN CURSO'}</div></div>`;
             document.getElementById('visor-detalle').innerHTML = html; 
         }
 
-        function renderCocina() { document.getElementById('monitor-tickets').innerHTML = (serverData.comandas || []).map(c => `<div class="ticket-cocina-visual"><center><b>EL REGUERO MORO</b><br>COCINA</center><br>MESA: <b>${c.mesa}</b> | PAX: ${c.pax}<br>HORA: ${c.ahora}<br>----------------------------<br>${c.productos.map(p => `<div style="${p.includes('>')?'padding-left:15px; opacity:0.6; font-size:0.8rem':'font-weight:bold; margin-top:5px;'}">${p}</div>`).join('')}<br>----------------------------<br><center>*** FIN COMANDA ***</center></div>`).join(''); }
+        function renderCocina() { document.getElementById('monitor-tickets').innerHTML = (serverData.comandas || []).map(c => `<div class="ticket-cocina-visual"><center><b>EL REGUERO MORO</b><br>COCINA</center><br>MESA: <b>${c.mesa}</b> | HORA: ${c.ahora}<br>ATENDIÓ: ${c.camarero}<br>----------------------------<br>${c.productos.map(p => `<div style="${p.includes('>')?'padding-left:15px; opacity:0.6; font-size:0.8rem':'font-weight:bold; margin-top:5px;'}">${p}</div>`).join('')}<br>----------------------------<br><center>*** FIN COMANDA ***</center></div>`).join(''); }
 
-        async function guardarMenu() { const m = { inicio: document.getElementById('m-inicio').value, fin: document.getElementById('m-fin').value, primero: document.getElementById('m-1').value, segundo: document.getElementById('m-2').value, postre: document.getElementById('m-3').value }; await fetch('/api/maestro/menus-diarios', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(m) }); alert("Menú guardado"); cargarMenus(); }
-        async function cargarMenus() { const r = await fetch('/api/maestro/menus-diarios'); const h = await r.json(); document.getElementById('historial-menus').innerHTML = h.map(m => `<div style="padding:15px; background:#f9f9f9; border-left:4px solid var(--gold-primary); margin-bottom:10px;"><b>SEMANA: ${m.inicio} al ${m.fin}</b><br><br><b>1º:</b> ${m.primero}<br><b>2º:</b> ${m.segundo}<br><b>Postres:</b> ${m.postre}</div>`).join(''); }
+        // CRUD CARTA
+        async function iniciarCRUDCarta() { const r = await fetch('/api/carta'); cartaLocal = await r.json(); renderCRUDCategorias(); }
+        function renderCRUDCategorias() {
+            document.getElementById('crud-cat-list').innerHTML = Object.keys(cartaLocal).map(cat => `<li class="cat-item ${categoriaActiva===cat?'active':''}" onclick="seleccionarCategoria('${cat}')"><span>${cat}</span> <span>▶</span></li>`).join('');
+            if(!categoriaActiva && Object.keys(cartaLocal).length > 0) seleccionarCategoria(Object.keys(cartaLocal)[0]);
+            else renderCRUDProductos();
+        }
+        function seleccionarCategoria(cat) { categoriaActiva = cat; renderCRUDCategorias(); document.getElementById('btn-del-cat').disabled = false; document.getElementById('btn-add-prod').disabled = false; }
+        function renderCRUDProductos() {
+            const panel = document.getElementById('crud-prod-list');
+            if(!categoriaActiva || !cartaLocal[categoriaActiva]) { panel.innerHTML = ""; return; }
+            panel.innerHTML = cartaLocal[categoriaActiva].map((p, idx) => `<div class="prod-fila"><input type="text" value="${p.nombre}" onchange="modProducto(${idx}, 'nombre', this.value)" style="flex-grow:1; margin:0;"><input type="number" step="0.01" value="${p.precio}" onchange="modProducto(${idx}, 'precio', this.value)" style="width:80px; margin:0;"><button class="btn-accion" style="background:var(--danger); width:35px; height:35px; padding:0; margin:0;" onclick="borrarProducto(${idx})">✕</button></div>`).join('');
+        }
+        function modProducto(idx, campo, valor) { cartaLocal[categoriaActiva][idx][campo] = campo==='precio'?parseFloat(valor):valor; }
+        function borrarProducto(idx) { cartaLocal[categoriaActiva].splice(idx, 1); renderCRUDProductos(); }
+        function añadirProducto() { cartaLocal[categoriaActiva].push({nombre:"Nuevo Plato", precio:0.00}); renderCRUDProductos(); }
+        function añadirCategoria(n) { if(n) { if(!cartaLocal[n]) { cartaLocal[n] = []; seleccionarCategoria(n); } } }
+        function prepararBorrarCategoria() { mostrarConfirm('¿Borrar Categoría?', `Se eliminará toda la categoría '${categoriaActiva}'.`, 'danger', () => { delete cartaLocal[categoriaActiva]; categoriaActiva = null; renderCRUDCategorias(); }); }
+        async function guardarCartaVisual() { await fetch('/api/carta/actualizar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(cartaLocal) }); mostrarAlerta("Carta sincronizada con éxito."); }
 
-        async function cargarCarta() { const r = await fetch('/api/carta'); const c = await r.json(); document.getElementById('json-carta').value = JSON.stringify(c, null, 2); }
-        async function guardarCarta() { try { const data = JSON.parse(document.getElementById('json-carta').value); await fetch('/api/carta/actualizar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) }); alert("Carta actualizada. Reflejado en todas las tablets."); } catch(e) { alert("Error de formato JSON. Revisa la sintaxis."); } }
+        // MENÚ SEMANAL (image_264fc1.jpg)
+        async function guardarMenu() { const m = { inicio: document.getElementById('m-inicio').value, fin: document.getElementById('m-fin').value, primero: document.getElementById('m-1').value, segundo: document.getElementById('m-2').value, postre: document.getElementById('m-3').value }; await fetch('/api/maestro/menus-diarios', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(m) }); mostrarAlerta("Menú publicado."); cargarMenus(); }
+        async function cargarMenus() { 
+            const r = await fetch('/api/maestro/menus-diarios'); const h = await r.json(); 
+            document.getElementById('historial-menus').innerHTML = h.map(m => `
+                <div class="menu-card-historial">
+                    <div class="menu-card-header" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display==='block'?'none':'block')">
+                        <b style="font-size:0.8rem;">SEMANA: ${m.inicio} al ${m.fin}</b>
+                        <button onclick="event.stopPropagation(); prepararEliminarMenu('${m.id}')" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">BORRAR</button>
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-seccion-titulo">ENTRANTES</div>
+                        ${m.primero.split(',').map(item => `<div class="menu-item-text">• ${item.trim()}</div>`).join('')}
+                        <div class="menu-seccion-titulo">PLATOS</div>
+                        ${m.segundo.split(',').map(item => `<div class="menu-item-text">• ${item.trim()}</div>`).join('')}
+                        <div class="menu-seccion-titulo">POSTRES</div>
+                        ${m.postre ? m.postre.split(',').map(item => `<div class="menu-item-text">• ${item.trim()}</div>`).join('') : '<div class="menu-item-text">Postres Caseros / Helado</div>'}
+                    </div>
+                </div>`).join(''); 
+        }
+        function prepararEliminarMenu(id) { mostrarConfirm('¿Borrar Menú?', 'Se eliminará del historial.', 'danger', async () => { await fetch('/api/maestro/menus-diarios/eliminar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id}) }); cargarMenus(); }); }
 
-        async function cargarListaTurnos() { const res = await fetch('/api/maestro/historial-archivos'); const archivos = await res.json(); document.getElementById('lista-turnos-historial').innerHTML = archivos.map(a => `<div class="mesa-item" onclick="cargarDetalleTurno('${a.id}')" style="background:#fdfaf2;"><span>TURNO CERRADO</span><b style="color:var(--gold-dark);">${a.id.substring(6,16)}</b></div>`).join(''); }
-        async function cargarDetalleTurno(archivo) { try { const res = await fetch(`/api/maestro/historial-detalle/${archivo}`); const data = await res.json(); let html = `<h2 style="margin-top:0; color:var(--gold-dark); border-bottom:2px solid var(--gold-primary); padding-bottom:10px;">Turno: ${archivo.substring(6,16)}</h2>`; data.resumenCaja.forEach(t => html += `<div style="padding:15px; border-bottom:1px solid #eee; background:#fafafa; margin-bottom:10px; border-radius:6px;"><div style="display:flex; justify-content:space-between;"><b>MESA ${t.mesa}</b> <span style="color:var(--success); font-weight:900;">${t.total.toFixed(2)}€</span></div><small>Atendió: ${t.cobradoPor} | Pago: ${t.metodo}</small></div>`); document.getElementById('visor-detalle-historial').innerHTML = html; const total = data.resumenCaja.reduce((acc, curr) => acc + parseFloat(curr.total), 0); const props = data.resumenCaja.reduce((acc, curr) => acc + (parseFloat(curr.propina)||0), 0); document.getElementById('visor-caja-historial').innerHTML = `<div style="text-align:center; padding:30px; background:#fff; border-radius:10px; border:2px solid var(--info);"><small>TOTAL DEL DÍA</small><h1 style="font-size:3.5rem; margin:10px 0; color:var(--info);">${total.toFixed(2)}€</h1><p>Propinas: +${props.toFixed(2)}€</p><p>Servicios: ${data.resumenCaja.length}</p></div>`; } catch (e) {} }
+        // HISTORIAL VENTAS (Desplegable)
+        async function cargarListaTurnos() { const res = await fetch('/api/maestro/historial-archivos'); const archivos = await res.json(); document.getElementById('lista-turnos-historial').innerHTML = archivos.map(a => `<div class="mesa-item" onclick="cargarDetalleTurno('${a.id}')"><span>CIERRE</span><b>${a.id.substring(6,16)}</b></div>`).join(''); }
+        async function cargarDetalleTurno(archivo) { 
+            try { 
+                const res = await fetch(`/api/maestro/historial-detalle/${archivo}`); const data = await res.json(); 
+                let html = `<h2 style="margin:0 0 15px; color:var(--gold-dark); border-bottom:2px solid var(--gold-primary); padding-bottom:5px; font-size:1.1rem;">Cierre: ${archivo.substring(6,16)}</h2>`; 
+                data.resumenCaja.forEach((t, idx) => {
+                    html += `
+                        <div class="historial-item">
+                            <div class="historial-item-header" onclick="toggleAcc('${idx}')">
+                                <span>MESA ${t.mesa}</span> <span style="color:var(--success)">${t.total.toFixed(2)}€</span>
+                            </div>
+                            <div class="historial-item-body" id="acc-${idx}">
+                                <div style="color:#666; margin-bottom:8px;">Cobrado por: ${t.cobradoPor} | Pago: ${t.metodo}</div>
+                                ${t.pedido.map(p => `<div>• ${p.nombre} (${p.precio.toFixed(2)}€)</div>`).join('')}
+                                <div style="margin-top:8px; font-weight:bold; color:var(--gold-dark);">Propina: ${t.propina.toFixed(2)}€</div>
+                            </div>
+                        </div>`;
+                }); 
+                document.getElementById('visor-detalle-historial').innerHTML = html; 
+                const total = data.resumenCaja.reduce((acc, curr) => acc + parseFloat(curr.total), 0); 
+                const props = data.resumenCaja.reduce((acc, curr) => acc + (parseFloat(curr.propina)||0), 0); 
+                document.getElementById('visor-caja-historial').innerHTML = `<div style="text-align:center; padding:25px; background:#fff; border-radius:10px; border:2px solid var(--info);"><small>RECAUDACIÓN</small><h1 style="font-size:2.5rem; margin:10px 0; color:var(--info);">${total.toFixed(2)}€</h1><p style="font-size:0.8rem; font-weight:bold;">Propinas: +${props.toFixed(2)}€</p></div>`; 
+            } catch (e) {} 
+        }
+        function toggleAcc(id) { const el = document.getElementById('acc-'+id); el.style.display = (el.style.display==='block'?'none':'block'); }
 
         setInterval(refresh, 3000); refresh();
     </script>

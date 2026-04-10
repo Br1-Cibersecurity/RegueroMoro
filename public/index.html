@@ -3,127 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reguero Moro - TPV Gestión Elite</title>
+    <title>Reguero Moro - TPV Elite</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --gold-light: #f1d592; --bg-deep: #0f1215; --bg-accent: #1c2229; --panel-white: #ffffff; --success: #2e7d32; --info: #1565c0; --danger: #c62828; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; display: flex; height: 100vh; background: radial-gradient(circle at 40% 50%, var(--bg-accent) 0%, var(--bg-deep) 100%); color: white; overflow: hidden; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; display: flex; height: 100vh; background: var(--bg-deep); color: white; overflow: hidden; }
         #login-overlay { position: fixed; inset: 0; background: var(--bg-deep); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .camarero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
-        .btn-camarero { padding: 25px 40px; background: linear-gradient(145deg, #2a2f35, #14181c); border: 2px solid var(--gold); border-radius: 15px; color: var(--gold); font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        .btn-camarero:hover { background: var(--gold); color: black; transform: scale(1.05); }
-        .marca-agua-central { position: fixed; top: 55%; left: 35%; transform: translate(-50%, -50%); width: 500px; height: 500px; background: url('logo.png') center/contain no-repeat; opacity: 0.12; filter: grayscale(1) brightness(0.7); pointer-events: none; z-index: 0; }
-        #panel-seleccion { flex: 2.5; padding: 40px; overflow-y: auto; z-index: 2; position: relative; }
-        .header-app { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(212,175,55,0.3); padding-bottom: 15px; margin-bottom: 20px; }
-        .header-app h1 { font-family: 'Cinzel'; color: var(--gold); margin: 0; font-size: 1.8rem; }
-        .logo-superior { height: 65px; filter: invert(1) drop-shadow(0 0 10px var(--gold)); }
-        .search-bar { width: 100%; padding: 18px; border-radius: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--gold); color: white; font-size: 1rem; margin-bottom: 20px; box-sizing: border-box; outline:none; }
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-        .btn-item { padding: 25px 15px; background: linear-gradient(145deg, #2a2f35, #14181c); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; color: white; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
-        .btn-item.ocupada { border-color: var(--danger) !important; background: #331a1a !important; color: #ff8a80 !important; }
-        .btn-item.cobrada { border-color: var(--success) !important; background: #1b2e1c !important; color: #81c784 !important; }
-        #panel-comanda { flex: 1; background: var(--panel-white); color: #1a1a1a; margin: 20px; border-radius: 35px; display: flex; flex-direction: column; box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 3; overflow: hidden; border-left: 10px solid var(--gold); }
-        .ticket-header { padding: 20px; background: #000; color: var(--gold); text-align: center; font-family: 'Cinzel'; font-size: 1.2rem; }
-        #lista-comanda { flex-grow: 1; padding: 20px; overflow-y: auto; font-weight: 600; }
-        .ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: #f9f9f9; border-radius: 8px; margin-bottom: 5px; }
+        .btn-camarero { padding: 25px 40px; background: #1c2229; border: 2px solid var(--gold); border-radius: 15px; color: var(--gold); font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn-camarero:active { transform:scale(0.95); }
+        .marca-agua-central { position: fixed; top: 55%; left: 35%; transform: translate(-50%, -50%); width: 500px; height: 500px; background: url('logo.png') center/contain no-repeat; opacity: 0.1; pointer-events: none; z-index: 0; }
+        #panel-seleccion { flex: 2.5; padding: 40px; overflow-y: auto; position: relative; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .btn-item { padding: 25px 15px; background: #1c2229; border: 1px solid rgba(212,175,55,0.3); border-radius: 15px; color: white; font-weight: 700; cursor: pointer; text-transform: uppercase; transition:0.2s;}
+        .btn-item:active { transform:scale(0.95); }
+        .btn-item.ocupada { border-color: var(--danger); background: #331a1a; }
+        .btn-item.cobrada { border-color: var(--success); background: #1b2e1c; }
+        #panel-comanda { flex: 1; background: white; color: #1a1a1a; margin: 20px; border-radius: 35px; display: flex; flex-direction: column; border-left: 10px solid var(--gold); overflow: hidden; z-index:3; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
         .btn-remove { background: var(--danger); border:none; color:white; border-radius:5px; padding:6px 12px; cursor:pointer; font-weight:800; margin-left:10px; }
         .total-box { padding: 30px; background: #f8f9fa; border-top: 2px solid var(--gold); }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 6000; display: none; align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 45px; border-radius: 40px; color: #1a1a1a; text-align: center; width: 450px; box-shadow: 0 0 50px rgba(212,175,55,0.3); border-bottom: 10px solid var(--gold); }
-        .input-gigante { font-size: 3rem; width: 100px; text-align: center; border: 3px solid var(--gold); border-radius: 10px; font-weight:900; font-family:'Montserrat'; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 6000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 40px; border-radius: 30px; color: black; text-align: center; width: 450px; max-height:85vh; overflow-y:auto; box-shadow: 0 0 50px rgba(212,175,55,0.3); }
+        .opt-btn { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 2px solid var(--gold); background: #fff; cursor: pointer; font-weight: 700; font-family: 'Montserrat'; font-size:1rem; transition:0.2s; }
+        .opt-btn.selected { background: var(--gold); color: white; }
     </style>
 </head>
 <body>
-    <div id="login-overlay">
-        <img src="logo.png" style="height:150px; filter:invert(1); margin-bottom:30px;">
-        <h1 style="font-family:'Cinzel'; color:var(--gold); font-size:3rem; margin:0;">REGUERO MORO</h1>
-        <div class="camarero-grid">
-            <button class="btn-camarero" onclick="login('Bruno')">Bruno</button>
-            <button class="btn-camarero" onclick="login('Manuel')">Manuel</button>
-            <button class="btn-camarero" onclick="login('Raul')">Raul</button>
-            <button class="btn-camarero" onclick="login('LaJefa')">LaJefa</button>
-            <button class="btn-camarero" onclick="login('Aitana')">Aitana</button>
-        </div>
-    </div>
+    <div id="login-overlay"><img src="logo.png" style="height:120px; filter:invert(1); margin-bottom:30px;"><h1 style="font-family:'Cinzel'; color:var(--gold); font-size:3rem; margin:0;">REGUERO MORO</h1><div class="camarero-grid"><button class="btn-camarero" onclick="login('Bruno')">Bruno</button><button class="btn-camarero" onclick="login('Manuel')">Manuel</button><button class="btn-camarero" onclick="login('Raul')">Raul</button><button class="btn-camarero" onclick="login('LaJefa')">LaJefa</button><button class="btn-camarero" onclick="login('Aitana')">Aitana</button></div></div>
+    
     <div class="marca-agua-central"></div>
+    
     <div id="panel-seleccion">
-        <div class="header-app">
-            <h1 id="titulo-header">SISTEMA GESTIÓN</h1>
-            <div style="text-align:right;"><span id="display-camarero" style="color:var(--gold); font-weight:800;">-</span><img src="logo.png" class="logo-superior" style="margin-left:15px;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--gold); padding-bottom:10px;">
+            <h1 style="font-family:'Cinzel'; color:var(--gold); margin:0;">SISTEMA GESTIÓN</h1>
+            <div style="text-align:right;"><span id="display-camarero" style="color:var(--gold); font-weight:800;">-</span><img src="logo.png" style="height:45px; filter:invert(1); margin-left:15px; vertical-align:middle;"></div>
         </div>
-        <input type="text" class="search-bar" id="buscador" placeholder="🔍 BUSCAR PLATO O BEBIDA..." oninput="filtrarGlobal(this.value)">
+        <input type="text" id="buscador" placeholder="🔍 BUSCAR PLATO RÁPIDO..." style="width:100%; padding:18px; border-radius:15px; background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:white; font-size:1rem; margin-bottom:20px; outline:none; box-sizing:border-box;" oninput="filtrarGlobal(this.value)">
         <div id="nav-superior" style="display:none; margin-bottom:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button class="btn-camarero" style="padding:15px; background:#444; border-color:#666; color:white;" onclick="atras()">⬅ VOLVER</button>
-            <button class="btn-camarero" style="padding:15px; background:black;" onclick="mostrarMapaMesas()">🏠 IR A MESAS</button>
+            <button class="btn-camarero" style="padding:15px; background:#444; border-color:#666; color:white;" onclick="atras()">⬅ VOLVER CATEGORÍAS</button>
+            <button class="btn-camarero" style="padding:15px; background:black;" onclick="mostrarMapaMesas()">🏠 VOLVER A MESAS</button>
         </div>
         <div id="contenido-dinamico"></div>
     </div>
+
     <div id="panel-comanda">
-        <div class="ticket-header">MESA: <span id="num-mesa">-</span> | PAX: <span id="num-pax">-</span></div>
-        <div id="lista-comanda"></div>
+        <div style="padding:20px; background:black; color:var(--gold); text-align:center; font-family:'Cinzel'; font-size:1.2rem; display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--gold);">
+            <span>MESA: <span id="num-mesa" style="font-weight:900; font-size:1.4rem;">-</span></span>
+            <span>PAX: <span id="num-pax">-</span></span>
+        </div>
+        
+        <div id="lista-comanda" style="flex-grow:1; padding:15px; overflow-y:auto;"></div>
+        
         <div class="total-box">
             <h2 style="margin:0;">TOTAL <span id="total-precio" style="float:right;">0.00€</span></h2>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
-                <button class="btn-camarero" style="background:#333; color:white; padding:15px; border:none;" onclick="imprimirComanda()">PEDIR (🖨️)</button>
-                <button class="btn-camarero" style="background:var(--gold); color:black; padding:15px;" onclick="abrirModalPago()">COBRAR</button>
+                <button class="btn-camarero" style="background:#333; color:white; padding:15px; border:none;" onclick="imprimirComanda()">PEDIR A COCINA</button>
+                <button class="btn-camarero" style="background:var(--gold); color:black; padding:15px;" onclick="abrirModalPago()">COBRAR MESA</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-pax" class="modal-overlay">
-        <div class="modal-content">
-            <h2 style="font-family:'Cinzel'; color:var(--gold);">MESA <span id="pax-mesa-target"></span></h2>
-            <h3>¿Cuántos comensales?</h3>
-            <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin:30px 0;">
-                <button style="font-size:2.5rem; width:70px; height:70px; border-radius:50%; border:none; background:#333; color:white; cursor:pointer;" onclick="cambiarPax(-1)">-</button>
-                <input type="number" id="input-pax" value="1" class="input-gigante">
-                <button style="font-size:2.5rem; width:70px; height:70px; border-radius:50%; border:none; background:#333; color:white; cursor:pointer;" onclick="cambiarPax(1)">+</button>
-            </div>
-            <button class="btn-camarero" style="background:var(--gold); color:black; width:100%; font-size:1.2rem;" onclick="confirmarPax()">ABRIR MESA</button>
-            <button style="margin-top:20px; border:none; background:none; color:#999; cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-pax').style.display='none'">CANCELAR</button>
-        </div>
-    </div>
+    <div id="modal-alerta" class="modal-overlay"><div class="modal-content"><h2 id="alerta-msg" style="color:var(--danger); font-family:'Cinzel';"></h2><button class="btn-camarero" style="width:100%; background:black;" onclick="document.getElementById('modal-alerta').style.display='none'">ENTENDIDO</button></div></div>
+    
+    <div id="modal-pax" class="modal-overlay"><div class="modal-content"><h2 style="font-family:'Cinzel'; color:var(--gold);">MESA <span id="pax-mesa-target"></span></h2><h3>¿Cuántos comensales?</h3><div style="display:flex; justify-content:center; align-items:center; gap:20px; margin:30px 0;"><button style="font-size:2.5rem; width:70px; height:70px; border-radius:50%; border:none; background:#333; color:white; cursor:pointer;" onclick="cambiarPax(-1)">-</button><input type="number" id="input-pax" value="1" style="font-size:3rem; width:100px; text-align:center; border:2px solid var(--gold); border-radius:10px; font-weight:900;"><button style="font-size:2.5rem; width:70px; height:70px; border-radius:50%; border:none; background:#333; color:white; cursor:pointer;" onclick="cambiarPax(1)">+</button></div><button class="btn-camarero" style="background:var(--gold); color:black; width:100%; font-size:1.2rem;" onclick="confirmarPax()">ABRIR MESA</button><button style="margin-top:20px; border:none; background:none; color:#999; cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-pax').style.display='none'">CANCELAR</button></div></div>
+    
+    <div id="modal-pago" class="modal-overlay"><div class="modal-content"><h2 style="font-family:'Cinzel'; color:var(--gold);">FINALIZAR CUENTA</h2><h1 id="total-pago-display" style="font-size:3.5rem; margin:10px 0;">0.00€</h1><div style="margin:20px 0;"><label style="font-weight:800; display:block; margin-bottom:5px;">¿AÑADIR PROPINA?</label><input type="number" id="propina-input" style="width:100%; box-sizing:border-box; padding:15px; font-size:2rem; text-align:center; border:2px solid #ddd; border-radius:10px;" placeholder="0"></div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><button class="btn-camarero" style="background:#222; color:white; padding:20px;" onclick="confirmarPago('Efectivo')">💵 EFECTIVO</button><button class="btn-camarero" style="background:var(--gold); color:black; padding:20px;" onclick="confirmarPago('Tarjeta')">💳 TARJETA</button></div><button style="margin-top:25px; border:none; background:none; color:var(--danger); cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-pago').style.display='none'">CANCELAR</button></div></div>
 
-    <div id="modal-pago" class="modal-overlay">
-        <div class="modal-content">
-            <h2 style="font-family:'Cinzel'; color:var(--gold);">FINALIZAR CUENTA</h2>
-            <h1 id="total-pago-display" style="font-size:3rem; margin:10px 0;">0.00€</h1>
-            <div style="margin:20px 0;">
-                <label style="font-weight:800; display:block; margin-bottom:5px;">¿AÑADIR PROPINA?</label>
-                <input type="number" id="propina-input" style="width:100%; box-sizing:border-box; padding:15px; font-size:2rem; text-align:center; border:2px solid #ddd; border-radius:10px;" placeholder="0">
+    <div id="modal-opciones" class="modal-overlay">
+        <div class="modal-content" id="modal-opciones-content" style="text-align:left;">
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <button class="btn-camarero" style="background:#222; color:white; padding:20px;" onclick="confirmarPago('Efectivo')">💵 EFECTIVO</button>
-                <button class="btn-camarero" style="background:var(--gold); color:black; padding:20px;" onclick="confirmarPago('Tarjeta')">💳 TARJETA</button>
-            </div>
-            <button style="margin-top:25px; border:none; background:none; color:var(--danger); cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-pago').style.display='none'">CANCELAR</button>
-        </div>
-    </div>
-
-    <div id="modal-alerta" class="modal-overlay">
-        <div class="modal-content">
-            <h2 id="alerta-mensaje" style="margin-bottom:30px;">Mensaje</h2>
-            <button class="btn-camarero" style="background:black; color:var(--gold); width:100%;" onclick="document.getElementById('modal-alerta').style.display='none'">ACEPTAR</button>
-        </div>
     </div>
 
     <script>
         let carta = {}, mesasVivas = [], mesaActiva = null, camareroActivo = "", mesaAperturaTemp = null, historialNav = [];
+        let menuDiarioData = null, versionCartaLocal = 0;
 
-        function mostrarAlerta(msg) { document.getElementById('alerta-mensaje').innerText = msg; document.getElementById('modal-alerta').style.display = 'flex'; }
+        function mostrarAlerta(msg) { document.getElementById('alerta-msg').innerText = msg; document.getElementById('modal-alerta').style.display = 'flex'; }
 
         async function login(n) { 
             const rStatus = await fetch('/api/maestro/status'); const status = await rStatus.json();
             if (!status.turno.activo) { mostrarAlerta("El turno está cerrado en el Panel Maestro. Inícialo primero."); return; }
+            
             camareroActivo = n; document.getElementById('login-overlay').style.display='none'; 
             document.getElementById('display-camarero').innerText="Atiende: " + n;
-            const res = await fetch('/api/carta'); carta = await res.json();
+            
+            await recargarCartaYMenus();
+            versionCartaLocal = status.cartaVersion;
+            
             await sincronizar(); mostrarMapaMesas(); setInterval(sincronizar, 3000);
         }
 
+        async function recargarCartaYMenus() {
+            const res = await fetch('/api/carta'); carta = await res.json();
+            const rMenus = await fetch('/api/maestro/menus-diarios'); const menus = await rMenus.json();
+            menuDiarioData = menus[0] || null;
+        }
+
         async function sincronizar() { 
-            const r = await fetch('/api/maestro/status'); const d = await r.json(); 
-            mesasVivas = d.mesasVivas || []; 
+            const r = await fetch('/api/maestro/status'); const d = await r.json(); mesasVivas = d.mesasVivas || [];
+            
+            if (d.cartaVersion && d.cartaVersion !== versionCartaLocal) {
+                await recargarCartaYMenus();
+                versionCartaLocal = d.cartaVersion;
+                if(mesaActiva && historialNav.length === 0) renderizarCarta(carta, "CARTA");
+            }
+
             if(!mesaActiva) actualizarColoresMesas(); 
             else { const m = mesasVivas.find(x => x.id === mesaActiva); if(m) actualizarTicketVisual(m.pedido, m.pax); }
         }
@@ -192,9 +177,9 @@
         async function doblar(id) { await fetch('/api/mesas/doblar', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({mesa:id}) }); mostrarMapaMesas(); }
 
         function renderizarCarta(obj, tit) {
-            let html = `<div style="color:var(--gold); margin:20px 0 15px; font-family:'Cinzel'; font-size:1.5rem; border-bottom:1px solid var(--gold); padding-bottom:10px;">${tit}</div><div class="grid-layout">`;
+            let html = `<div style="color:var(--gold); margin:20px 0 15px; font-family:'Cinzel'; font-size:1.5rem; border-bottom:1px solid var(--gold); padding-bottom:10px; text-transform:uppercase;">${tit}</div><div class="grid-layout">`;
             if(Array.isArray(obj)) {
-                obj.forEach(p => html += `<button class="btn-item" onclick="añadir('${p.nombre}', ${p.precio})">${p.nombre}<br><small>${p.precio.toFixed(2)}€</small></button>`);
+                obj.forEach(p => html += `<button class="btn-item" onclick="gestionarAñadir('${p.nombre}', ${p.precio})">${p.nombre}<br><small>${p.precio.toFixed(2)}€</small></button>`);
             } else {
                 Object.keys(obj).forEach(cat => html += `<button class="btn-item" onclick="navegarProvisional('${cat}')">${cat}</button>`);
             }
@@ -213,59 +198,183 @@
 
         function atras() { historialNav.pop(); if(historialNav.length === 0) renderizarCarta(carta, "CARTA"); else renderizarCarta(historialNav[historialNav.length-1].obj, historialNav[historialNav.length-1].titulo); }
 
-        async function añadir(n, p) {
-            await fetch('/api/mesas/actualizar', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ mesa:mesaActiva, pedido:[{nombre:n, precio:p, idUnico:Date.now(), estado:'nuevo', camarero:camareroActivo}], camarero:camareroActivo, operacion:'añadir' }) });
-            sincronizar();
+        // --- SISTEMA DE MODALES INTELIGENTES PARA MENÚS Y CARNES ---
+        function gestionarAñadir(nombre, precio) {
+            const nLower = nombre.toLowerCase();
+            const esCarnePunto = nLower.includes("lomo bajo") || nLower.includes("solomillo") || nLower.includes("picaña");
+
+            if (nLower.includes("diario")) abrirModalDiario(nombre, precio);
+            else if (nLower.includes("paletilla")) abrirModalPaletilla(nombre, precio);
+            else if (nLower.includes("calsotada") || nLower.includes("calçotada")) {
+                if (nLower.includes("teja")) añadir(nombre, precio); // Si solo es añadir una Teja suelta, lo añade directamente
+                else abrirModalCalsotada(nombre, precio);
+            }
+            else if (nLower.includes("carnivoro") || esCarnePunto) abrirModalPuntoCarne(nombre, precio);
+            else añadir(nombre, precio);
         }
 
+        function toggleSingleSelect(btn, groupClass) {
+            document.querySelectorAll('.' + groupClass).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        // Modal Punto de Carne (Solomillo, Lomo Bajo, Picaña, Menú Carnívoro)
+        function abrirModalPuntoCarne(nombre, precio) {
+            let html = `<h2 style="font-family:'Cinzel'; color:var(--gold); text-align:center; margin-top:0;">PUNTO DE LA CARNE</h2>`;
+            html += `<h4 style="margin:10px 0; text-align:center;">${nombre}</h4>`;
+            html += `<div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:15px;">`;
+            ['Punto Menos', 'Punto', 'Punto Más'].forEach(pto => {
+                html += `<button class="opt-btn group-pto" onclick="toggleSingleSelect(this, 'group-pto')">${pto}</button>`;
+            });
+            html += `</div>`;
+            html += `<button class="btn-camarero" style="width:100%; margin-top:20px; background:black;" onclick="guardarPuntoCarne('${nombre}', ${precio})">AÑADIR A COMANDA</button>`;
+            html += `<button style="margin-top:20px; width:100%; border:none; background:none; color:var(--danger); cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-opciones').style.display='none'">CANCELAR</button>`;
+            document.getElementById('modal-opciones-content').innerHTML = html; document.getElementById('modal-opciones').style.display = 'flex';
+        }
+
+        function guardarPuntoCarne(nombre, precio) {
+            const sel = document.querySelector('.group-pto.selected');
+            if(!sel) { mostrarAlerta("Debes seleccionar el punto de la carne."); return; }
+            document.getElementById('modal-opciones').style.display = 'none';
+            añadir(`${nombre} [${sel.innerText}]`, precio);
+        }
+
+        // Modal Menú Diario
+        function abrirModalDiario(nombre, precio) {
+            if(!menuDiarioData) { añadir(nombre, precio); return; }
+            let p1 = menuDiarioData.primero.split(','); 
+            let p2 = menuDiarioData.segundo.split(',');
+            let p3 = (menuDiarioData.postre || "Postre a elegir").split(',');
+            
+            let html = `<h2 style="font-family:'Cinzel'; color:var(--gold); text-align:center; margin-top:0;">Menú Diario</h2>`;
+            html += `<h4 style="margin:5px 0;">1º Plato:</h4><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">`;
+            p1.forEach(o => html += `<button class="opt-btn group-1" onclick="toggleSingleSelect(this, 'group-1')">${o.trim()}</button>`);
+            html += `</div><h4 style="margin:5px 0;">2º Plato:</h4><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">`;
+            p2.forEach(o => html += `<button class="opt-btn group-2" onclick="toggleSingleSelect(this, 'group-2')">${o.trim()}</button>`);
+            html += `</div><h4 style="margin:5px 0;">Postre:</h4><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">`;
+            p3.forEach(o => html += `<button class="opt-btn group-3" onclick="toggleSingleSelect(this, 'group-3')">${o.trim()}</button>`);
+            html += `</div><button class="btn-camarero" style="width:100%; margin-top:20px; background:black;" onclick="guardarModalDiario('${nombre}', ${precio})">AÑADIR A COMANDA</button>`;
+            html += `<button style="margin-top:20px; width:100%; border:none; background:none; color:var(--danger); cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-opciones').style.display='none'">CANCELAR</button>`;
+            document.getElementById('modal-opciones-content').innerHTML = html; document.getElementById('modal-opciones').style.display = 'flex';
+        }
+
+        function guardarModalDiario(nombre, precio) {
+            const sel1 = document.querySelector('.group-1.selected'); const sel2 = document.querySelector('.group-2.selected'); const sel3 = document.querySelector('.group-3.selected');
+            if(!sel1 || !sel2 || !sel3) { mostrarAlerta("Debes seleccionar Primero, Segundo y Postre."); return; }
+            document.getElementById('modal-opciones').style.display = 'none';
+            añadir(`${nombre} [1º: ${sel1.innerText}] [2º: ${sel2.innerText}] [Postre: ${sel3.innerText}]`, precio);
+        }
+
+        // Modal Paletilla (Elegir Vino)
+        function abrirModalPaletilla(nombre, precio) {
+            let html = `<h2 style="font-family:'Cinzel'; color:var(--gold); text-align:center; margin-top:0;">Vino Paletilla</h2>`;
+            html += `<button class="opt-btn group-v" onclick="toggleSingleSelect(this, 'group-v')">Prieto Picudo TINTO</button>`;
+            html += `<button class="opt-btn group-v" onclick="toggleSingleSelect(this, 'group-v')">Prieto Picudo ROSADO</button>`;
+            html += `<button class="btn-camarero" style="width:100%; margin-top:20px; background:black;" onclick="guardarPaletilla('${nombre}', ${precio})">AÑADIR A COMANDA</button>`;
+            html += `<button style="margin-top:20px; width:100%; border:none; background:none; color:var(--danger); cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-opciones').style.display='none'">CANCELAR</button>`;
+            document.getElementById('modal-opciones-content').innerHTML = html; document.getElementById('modal-opciones').style.display = 'flex';
+        }
+
+        function guardarPaletilla(nombre, precio) {
+            const sel = document.querySelector('.group-v.selected');
+            if(!sel) { mostrarAlerta("Debes seleccionar el Vino."); return; }
+            document.getElementById('modal-opciones').style.display = 'none';
+            añadir(`${nombre} [Vino: ${sel.innerText}]`, precio);
+        }
+
+        // Modal Calçotada (Elegir Segundo y anidado de carne)
+        function abrirModalCalsotada(nombre, precio) {
+            let html = `<h2 style="font-family:'Cinzel'; color:var(--gold); text-align:center; margin-top:0;">Segundo Calçotada</h2>`;
+            html += `<h4 style="margin:5px 0;">Elegir Segundo Plato:</h4>`;
+            html += `<button class="opt-btn group-c" onclick="toggleSingleSelect(this, 'group-c')">Costilla</button>`;
+            html += `<button class="opt-btn group-c" onclick="toggleSingleSelect(this, 'group-c')">Lomo Bajo</button>`;
+            html += `<button class="opt-btn group-c" onclick="toggleSingleSelect(this, 'group-c')">Lubina</button>`;
+            html += `<button class="btn-camarero" style="width:100%; margin-top:20px; background:black;" onclick="guardarCalsotada('${nombre}', ${precio})">AÑADIR A COMANDA</button>`;
+            html += `<button style="margin-top:20px; width:100%; border:none; background:none; color:var(--danger); cursor:pointer; font-weight:800;" onclick="document.getElementById('modal-opciones').style.display='none'">CANCELAR</button>`;
+            document.getElementById('modal-opciones-content').innerHTML = html; document.getElementById('modal-opciones').style.display = 'flex';
+        }
+
+        function guardarCalsotada(nombre, precio) {
+            const sel = document.querySelector('.group-c.selected');
+            if(!sel) { mostrarAlerta("Debes seleccionar un Segundo."); return; }
+            document.getElementById('modal-opciones').style.display = 'none';
+            
+            const segundo = sel.innerText;
+            const nombreFinal = `${nombre} [2º: ${segundo}]`;
+            
+            // Si escoge Lomo Bajo en la calçotada, abrimos el modal del punto de la carne
+            if (segundo.toLowerCase().includes("lomo bajo")) {
+                abrirModalPuntoCarne(nombreFinal, precio);
+            } else {
+                añadir(nombreFinal, precio);
+            }
+        }
+
+        // --- GESTIÓN ESTÁNDAR ---
+        async function añadir(n, p) { await fetch('/api/mesas/actualizar', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ mesa:mesaActiva, pedido:[{nombre:n, precio:p, idUnico:Date.now(), estado:'nuevo', camarero:camareroActivo}], camarero:camareroActivo, operacion:'añadir' }) }); sincronizar(); }
+
         async function eliminarProducto(id) {
-            const m = mesasVivas.find(x => x.id === mesaActiva);
-            if(!m) return;
+            const m = mesasVivas.find(x => x.id === mesaActiva); if(!m) return;
             const nuevoPed = m.pedido.filter(p => p.idUnico !== id);
             await fetch('/api/mesas/actualizar', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ mesa:mesaActiva, pedido:nuevoPed, camarero:camareroActivo, operacion:'sobrescribir' }) });
             sincronizar();
         }
 
+        // DESGLOSE VISUAL EN LA TABLET DEL CAMARERO
         function actualizarTicketVisual(ped, px) {
             let htmlNuevos = "", htmlImpresos = "", total = 0; 
             ped.forEach(i => { 
                 total += i.precio; 
-                let row = `<div class="ticket-item"><div>${i.nombre} <span style="opacity:0.5; font-size:0.7rem;">(${i.camarero || '?'})</span></div><div><b>${i.precio.toFixed(2)}€</b> <button class="btn-remove" onclick="eliminarProducto(${i.idUnico})">✕</button></div></div>`;
+                
+                let subText = "";
+                const nNorm = i.nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                
+                if (nNorm.includes("carnivoro")) {
+                    subText = "<br><small style='color:var(--gold-light); font-size:0.75rem;'>+ Embutidos, Ensalada R., Lomo bajo, Postre, Botella Tinto Mencía, Café</small>";
+                } else if (nNorm.includes("paletilla")) {
+                    subText = "<br><small style='color:var(--gold-light); font-size:0.75rem;'>+ Ensalada R., Gambones, Paletilla, Postre, Vino Elegido, Café</small>";
+                } else if (nNorm.includes("mar") && !nNorm.includes("calamar")) {
+                    subText = "<br><small style='color:var(--gold-light); font-size:0.75rem;'>+ Carpaccio, Tentáculo, Lubina, Postre, Botella Blanco Albarín, Café</small>";
+                } else if (nNorm.includes("calsotada") || nNorm.includes("calçotada")) {
+                    if (!nNorm.includes("teja")) {
+                        subText = "<br><small style='color:var(--gold-light); font-size:0.75rem;'>+ Embutido, Teja, Segundo, Postre, Café</small>";
+                    }
+                }
+
+                let row = `<div class="ticket-item"><div style="flex-grow:1;">${i.nombre} ${subText} <br><small style="opacity:0.5; font-size:0.7rem;">(Picó: ${i.camarero || '?'})</small></div><div><b>${i.precio.toFixed(2)}€</b> <button class="btn-remove" onclick="eliminarProducto(${i.idUnico})">✕</button></div></div>`;
                 i.estado === 'nuevo' ? htmlNuevos += row : htmlImpresos += row;
             }); 
-            document.getElementById('lista-comanda').innerHTML = (htmlNuevos ? `<h4 style="color:var(--gold); margin:10px 0;">🟡 NUEVOS</h4>${htmlNuevos}` : "") + (htmlImpresos ? `<h4 style="color:var(--success); margin:15px 0 10px;">🟢 IMPRESOS</h4>${htmlImpresos}` : "");
+            document.getElementById('lista-comanda').innerHTML = (htmlNuevos ? `<h4 style="color:var(--gold); margin:10px 0;">🟡 NUEVOS</h4>${htmlNuevos}` : "") + (htmlImpresos ? `<h4 style="color:var(--success); margin:15px 0 10px;">🟢 COCINA / SERVIDOS</h4>${htmlImpresos}` : "");
             document.getElementById('total-precio').innerText = total.toFixed(2) + "€"; if(px) document.getElementById('num-pax').innerText = px; 
         }
 
         async function imprimirComanda() {
             const m = mesasVivas.find(x => x.id === mesaActiva);
             const nuevos = m.pedido.filter(p => p.estado === 'nuevo');
-            if(nuevos.length === 0) { mostrarAlerta("No hay platos nuevos para pedir."); return; }
+            if(nuevos.length === 0) { mostrarAlerta("No hay platos nuevos para pedir a cocina."); return; }
             
             await fetch('/api/imprimir/comanda', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ mesa:mesaActiva, pax:m.pax, pedidoNuevos:nuevos, camarero:camareroActivo }) });
             m.pedido.forEach(p => p.estado = 'impreso');
             await fetch('/api/mesas/actualizar', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ mesa:mesaActiva, pedido:m.pedido, camarero:camareroActivo, operacion:'sobrescribir' }) });
-            mostrarAlerta("¡Comanda enviada a cocina!"); sincronizar();
+            mostrarAlerta("¡Comanda enviada a cocina correctamente!"); sincronizar();
         }
 
         function abrirModalPago() { 
             const m = mesasVivas.find(x => x.id === mesaActiva); 
             if(!m || m.pedido.length === 0) { mostrarAlerta("La mesa está vacía."); return; }
             document.getElementById('total-pago-display').innerText = document.getElementById('total-precio').innerText; 
-            document.getElementById('propina-input').value = "";
-            document.getElementById('modal-pago').style.display = 'flex'; 
+            document.getElementById('propina-input').value = ""; document.getElementById('modal-pago').style.display = 'flex'; 
         }
 
         async function confirmarPago(metodo) { 
             const prop = parseFloat(document.getElementById('propina-input').value) || 0; 
             const m = mesasVivas.find(x => x.id === mesaActiva); 
             let finalPedido = [...m.pedido];
-            if(prop > 0) finalPedido.push({nombre:"PROPINA", precio:prop, estado:'impreso', idUnico:Date.now(), camarero:camareroActivo});
+            if(prop > 0) finalPedido.push({nombre:"PROPINA DE CLIENTE", precio:prop, estado:'impreso', idUnico:Date.now(), camarero:camareroActivo});
             
             const totalFinal = finalPedido.reduce((a,b)=>a+b.precio,0); 
             await fetch('/api/caja/cierre', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ mesa:mesaActiva, total:totalFinal, metodo, propina:prop, camarero:camareroActivo, pedido:finalPedido }) }); 
-            document.getElementById('modal-pago').style.display = 'none'; 
-            mostrarMapaMesas(); 
+            document.getElementById('modal-pago').style.display = 'none'; mostrarMapaMesas(); 
         }
 
         function filtrarGlobal(v) { 
